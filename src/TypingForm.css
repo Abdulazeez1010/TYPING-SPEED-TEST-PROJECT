@@ -1,0 +1,10 @@
+.normalStyle{
+    color: hsl(240, 3%, 46%);
+}
+.errorStyle {
+    text-decoration: underline;
+    color: hsl(354, 63%, 57%);
+}
+.correctStyle {
+    color: hsl(140, 63%, 57%);
+}
