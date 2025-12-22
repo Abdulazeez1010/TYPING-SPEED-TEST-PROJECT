@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import data from './data.json';
-import './TypingForm.css';
+import './TypingText.css';
 
-function TypingContainer() {
+function TypingText() {
     const [text] = useState(data.hard[0].text)
     const [typed, setTyped] = useState("");
 
@@ -15,9 +15,7 @@ function TypingContainer() {
                 setTyped((prev) => prev.slice(0, -1));
             }
         };
-
         window.addEventListener("keydown", handleKeyDown);
-
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
         };
@@ -51,4 +49,4 @@ function TypingContainer() {
   )
 }
 
-export default TypingContainer;
+export default TypingText;

@@ -5,16 +5,16 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import './TypingForm.css';
 
-import TypingContainer from "./TypingContainer"
+import TypingText from "./TypingText"
 import TypingAppBar from "./TypingAppBar";
+import TypingMenuBar from './TypingMenuBar';
 
-function TypingPage() {
+function TypingTest() {
     return (
       <>
       <Fragment>
         <CssBaseline />
         <Container fixed sx={{
-          fontFamily: "Sora, sans-serif",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -22,7 +22,7 @@ function TypingPage() {
         }}>
           <Box sx={{
             bgcolor: 'hsl(0, 0%, 7%)',
-            height: '80vh',
+            height: '90vh',
             width: '80vw',
             padding: "1rem 5rem",
             fontSize: 24,
@@ -30,9 +30,9 @@ function TypingPage() {
             }}
           >
             <TypingAppBar/>
-            {/* MenuBar Goes here*/}
+            <TypingMenuBar/>
           <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3}}/>
-          <TypingContainer/>
+          <TypingText/>
           </Box>
         </Container>
       </Fragment>        
@@ -40,4 +40,4 @@ function TypingPage() {
     )
 }
 
-export default TypingPage;
+export default TypingTest;

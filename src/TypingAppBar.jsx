@@ -6,7 +6,6 @@ import personalBestLogo from './assets/images/icon-personal-best.svg';
 
 function TypingAppBar() {
   return (
-      <Container maxWidth="xl">
         <Toolbar disableGutters sx={{
             justifyContent: 'space-between'
         }}>
@@ -15,15 +14,25 @@ function TypingAppBar() {
           </div>
           <div style={{display: 'flex', alignItems: 'center'}}>
             <img src={personalBestLogo} alt="Personal Best Logo" />
-            <Typography variant='subtitle1' component='span' sx={{fontFamily: "Sora, sans-serif", ml: 1, color: 'hsl(240, 1%, 59%)'}}>
+            <Typography
+              variant='subtitle1'
+              component='span' 
+              sx={{ 
+                ml: 1, 
+                color: 'hsl(240, 1%, 59%)'
+              }}
+            >
                 Personal best:
-            </Typography>
-            <Typography variant='subtitle1' component='span' sx={{fontFamily: "Sora, sans-serif", ml: 1, color: 'white'}}>
-                45 WPM
+                <Typography
+                  variant='subtitle1'
+                  component='span'
+                  sx={{ ml: 1, color: 'hsl(0, 0%, 100%)'}}
+                >
+                  45 WPM
+                </Typography>
             </Typography>
           </div>
         </Toolbar>
-      </Container>
   );
 }
 export default TypingAppBar;
