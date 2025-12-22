@@ -3,23 +3,7 @@ import Typography from '@mui/material/Typography';
 import data from './data.json';
 import './TypingText.css';
 
-function TypingText() {
-    const [text] = useState(data.hard[0].text)
-    const [typed, setTyped] = useState("");
-
-    useEffect(() => {
-        const handleKeyDown = (event) => {
-            if (event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
-                setTyped((prev) => prev + event.key);
-            } else if (event.key === "Backspace") {
-                setTyped((prev) => prev.slice(0, -1));
-            }
-        };
-        window.addEventListener("keydown", handleKeyDown);
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown);
-        };
-    }, []);
+function TypingText({text, typed }) {
 
   return (
     <div className='Typing-form-container'>
@@ -29,6 +13,13 @@ function TypingText() {
         if (typed[i] !== null && i < typed.length){
           classes += typed[i] === char ? ` correctStyle` : ` errorStyle`
         }
+        // if (typed[i] !== null && i < typed.length){
+        //   if (typed[i] === char){
+        //     classes += ` correctStyle`;
+        //   } else {
+        //     classes += ` errorStyle`;
+        //   }
+        // }
         return (
           <Typography
             key={i}

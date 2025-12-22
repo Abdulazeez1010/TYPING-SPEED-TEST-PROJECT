@@ -9,18 +9,7 @@ import Button from '@mui/material/Button';
 
 import './TypingMenuBar.css'
 
-const statConfig = [
-    { id: 'wpm', label : 'WPM',  color: 'hsl(0, 0%, 100%)', unit: ''},
-    { id: 'accuracy', label :'Accuracy',  color: 'hsl(354, 63%, 57%)', unit: '%'},
-    { id: 'time', label : 'Time', color: 'hsl(49, 85%, 70%)', unit: ''}
-];
-
-function TypingMenuBar(){
-  const [stats, setStats] = useState({
-    wpm: 0,
-    accuracy: 80,
-    time: 60
-  })
+function TypingMenuBar({statConfig, stats}){
     return (
         <>
           <Toolbar disableGutters sx={{
@@ -32,24 +21,21 @@ function TypingMenuBar(){
             <Box sx={{ display: 'flex', justifyContent:'space-between'}}>
               <Box sx={{ display: 'flex', gap: 2 }}>
                 {statConfig.map(({id, label, color, unit}) => (
-                  <>
-              <Typography sx={{color: 'hsl(240, 1%, 59%)',  display: 'flex', alignItems: 'center'}}>
-                {label}:
-                <Typography 
-                  component='span'
-                  sx={{color: color, fontWeight: '700'}}
-                >
-                  {stats[id]}{unit}
-                </Typography>
-                {id !== 'time' &&
-                <Divider
-                  orientation="vertical"
-                  sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.6, padding: 1.5}}
-                />
-                }
-              </Typography>
-              </>
-
+                  <Typography key={id} sx={{color: 'hsl(240, 1%, 59%)',  display: 'flex', alignItems: 'center'}}>
+                    {label}:
+                    <Typography 
+                      component='span'
+                      sx={{color: color, fontWeight: '700'}}
+                    >
+                      {stats[id]}{unit}
+                    </Typography>
+                    {/* {id !== 'time' &&
+                    <Divider
+                      orientation="vertical"
+                      sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.6, padding: 1.5}}
+                    />
+                    } */}
+                  </Typography>
               ))}
             </Box>
             </Box>

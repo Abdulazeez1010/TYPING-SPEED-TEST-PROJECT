@@ -1,4 +1,4 @@
-import TypingPage from './TypingPage'
+import TypingTest from './TypingTest'
 import { ThemeProvider } from '@mui/material/styles'
 import theme from './theme'
 
@@ -7,10 +7,10 @@ function App() {
   return (
     <>
     <ThemeProvider theme={theme}>
-      <TypingPage/>
+      <TypingTest/>
     </ThemeProvider>
     </>
   )
 }
 
-export default App
+export default App;
