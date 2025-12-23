@@ -1,7 +1,5 @@
-import { useState } from 'react';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
@@ -9,7 +7,7 @@ import Button from '@mui/material/Button';
 
 import './TypingMenuBar.css'
 
-function TypingMenuBar({statConfig, stats}){
+function TypingMenuBar({statConfig, stats, updateDifficulty}){
     return (
         <>
           <Toolbar disableGutters sx={{
@@ -43,9 +41,27 @@ function TypingMenuBar({statConfig, stats}){
               <Box sx={{display: 'flex', alignItems: 'center', gap: 2}}>
                 <Typography sx={{ color: 'hsl(240, 1%, 59%)'}}>Difficulty:</Typography>
                 <Stack id="button" spacing={0.5} direction="row">
-                  <Button variant="outlined" size='small'>Easy</Button>
-                  <Button variant="outlined" size='small'>Medium</Button>
-                  <Button variant="outlined" size='small'>Hard</Button>
+                  <Button
+                    onClick={() => updateDifficulty('easy')}
+                    variant="outlined"
+                    size='small'
+                  >
+                    Easy
+                  </Button>
+                  <Button
+                    onClick={() => updateDifficulty('medium')}
+                    variant="outlined"
+                    size='small'
+                  >
+                    Medium
+                  </Button>
+                  <Button
+                    onClick={() => updateDifficulty('hard')}
+                    variant="outlined"
+                    size='small'
+                  >
+                    Hard
+                  </Button>
                 </Stack>
               </Box>
               <Divider orientation="vertical" sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.6, padding: 1}}/>

@@ -17,10 +17,11 @@ const statConfig = [
 ];
 
 function TypingTest() {
-  const [text] = useState(data.hard[0].text)
-  const [typed, setTyped] = useState("");
+  const [difficulty, setDifficulty] = useState('hard');
+  const [text, setText] = useState('')
+  const [typed, setTyped] = useState('');
   const [timeLeft, setTimeLeft] = useState(60);
-  const [isRunning, setIsRuning] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
 
   const wrongLetters = typed
     .split("")
@@ -43,7 +44,19 @@ function TypingTest() {
   };
 
   useEffect(() => {
+    const passages = data[difficulty];
+    const randomIndex = Math.floor(Math.random() * passages.length)
+    setText(passages[randomIndex].text)
+
+    setTyped('');
+    setTimeLeft('60');
+    setIsRunning(false);
+  }, [difficulty]);
+
+  useEffect(() => {
     const handleKeyDown = (event) => {
+      if (timeLeft === 0) return;
+
       if (event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
         setTyped((prev) => prev + event.key);
       } else if (event.key === "Backspace") {
@@ -52,77 +65,70 @@ function TypingTest() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [timeLeft]);
 
   useEffect(() => {
     if (typed.length === 1 && !isRunning) {
-      setIsRuning(true);
+      setIsRunning(true);
     }
   }, [typed, isRunning]);
 
   useEffect(() => {
     if (!isRunning) return;
-    if (timeLeft === 0) return;
 
     const interval = setInterval(() => {
-      setTimeLeft(prev => prev - 1);   
+      setTimeLeft(prev => {
+        if (prev === 1) {
+          setIsRunning(false);
+          return 0;
+        }
+        return prev - 1;
+      });   
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isRunning, timeLeft]);
+  }, [isRunning]);
 
-    return (
-      <>
-      <Fragment>
-        <CssBaseline />
-        <Container fixed sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          // marginTop: 10
-        }}>
-          <Box sx={{
-            bgcolor: 'hsl(0, 0%, 7%)',
-            height: '90vh',
-            width: '80vw',
-            padding: "1rem 5rem",
-            fontSize: 24,
-            overflowY: 'auto'
-            }}
-          >
-            <TypingAppBar/>
-            <TypingMenuBar
-              statConfig={statConfig}
-              stats={stats}
-            />
-          <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3}}/>
-          
-          <TypingText
-            text={text}
-            typed={typed}
+  const updateDifficulty= (lvl) => {
+    setDifficulty(lvl);
+  }
+
+  return (
+    <>
+    <Fragment>
+      <CssBaseline />
+      <Container fixed sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        // marginTop: 10
+      }}>
+        <Box sx={{
+          bgcolor: 'hsl(0, 0%, 7%)',
+          height: '90vh',
+          width: '80vw',
+          padding: "1rem 5rem",
+          fontSize: 24,
+          overflowY: 'auto'
+          }}
+        >
+          <TypingAppBar/>
+          <TypingMenuBar
+            statConfig={statConfig}
+            stats={stats}
+            updateDifficulty={updateDifficulty}
           />
-          </Box>
-        </Container>
-      </Fragment>        
-      </>
-    )
+        <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3}}/>
+        
+        <TypingText
+          text={text}
+          typed={typed}
+        />
+        </Box>
+      </Container>
+    </Fragment>        
+    </>
+  )
 }
 
 export default TypingTest;
-
-
-//  useEffect(() => {
-//     if (typed.length === 0){
-//       setStats(prev => ({
-//         ...prev,
-//         accuracy: 0
-//       }));
-//       return
-//     }
-
-//     const acc = ((typed.length - wrongLetters)/typed.length) * 100;
-//     setStats(prev => ({
-//       ...prev,
-//       accuracy: Math.max(0, Math.round(acc))
-//     }));
-//   }, [typed, wrongLetters]);

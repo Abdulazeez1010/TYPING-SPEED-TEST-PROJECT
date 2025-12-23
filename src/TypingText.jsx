@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
-import data from './data.json';
 import './TypingText.css';
 
 function TypingText({text, typed }) {
@@ -13,13 +11,6 @@ function TypingText({text, typed }) {
         if (typed[i] !== null && i < typed.length){
           classes += typed[i] === char ? ` correctStyle` : ` errorStyle`
         }
-        // if (typed[i] !== null && i < typed.length){
-        //   if (typed[i] === char){
-        //     classes += ` correctStyle`;
-        //   } else {
-        //     classes += ` errorStyle`;
-        //   }
-        // }
         return (
           <Typography
             key={i}
