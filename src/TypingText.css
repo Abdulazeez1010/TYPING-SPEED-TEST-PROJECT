@@ -1,21 +1,48 @@
 .Typing-form-container {
     margin-top: 2rem;
-    padding: 1rem 2rem;
+    /* padding: 1rem 2rem; */
     background-color: hsl(0, 0%, 7%);
     border-radius: 8px;
     height: 60vh;
-    overflow-y: auto;
+    /* overflow-y: auto; */
     font-size: 1.5rem;
     line-height: 1.6;
 }
 
-.normalStyle{
+.word {
+    display: inline-block;
+}
+
+.char {
     color: hsl(240, 3%, 46%);
 }
-.errorStyle {
+
+.char-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.error {
     text-decoration: underline;
     color: hsl(354, 63%, 57%);
 }
-.correctStyle {
+
+.correct {
     color: hsl(140, 63%, 57%);
+}
+
+.cursor {
+    position: absolute;
+    inset: 0;
+    background-color: white;
+    opacity: 0.25;
+    border-radius: 4px;
+    pointer-events: none;
+    animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
 }

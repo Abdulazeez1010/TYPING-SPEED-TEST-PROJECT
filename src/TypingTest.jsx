@@ -93,6 +93,7 @@ function TypingTest() {
     setDifficulty(lvl);
   }
 
+
   return (
     <>
     <Fragment>
@@ -123,6 +124,7 @@ function TypingTest() {
         <TypingText
           text={text}
           typed={typed}
+          isRunning
         />
         </Box>
       </Container>
