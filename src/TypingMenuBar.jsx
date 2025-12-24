@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 
 import './TypingMenuBar.css'
 
-function TypingMenuBar({statConfig, stats, updateDifficulty}){
+function TypingMenuBar({statConfig, stats, handleDifficulty, handleMode}){
     return (
         <>
           <Toolbar disableGutters sx={{
@@ -42,21 +42,21 @@ function TypingMenuBar({statConfig, stats, updateDifficulty}){
                 <Typography sx={{ color: 'hsl(240, 1%, 59%)'}}>Difficulty:</Typography>
                 <Stack id="button" spacing={0.5} direction="row">
                   <Button
-                    onClick={() => updateDifficulty('easy')}
+                    onClick={() => handleDifficulty('easy')}
                     variant="outlined"
                     size='small'
                   >
                     Easy
                   </Button>
                   <Button
-                    onClick={() => updateDifficulty('medium')}
+                    onClick={() => handleDifficulty('medium')}
                     variant="outlined"
                     size='small'
                   >
                     Medium
                   </Button>
                   <Button
-                    onClick={() => updateDifficulty('hard')}
+                    onClick={() => handleDifficulty('hard')}
                     variant="outlined"
                     size='small'
                   >
@@ -68,8 +68,18 @@ function TypingMenuBar({statConfig, stats, updateDifficulty}){
               <Box sx={{display: 'flex', alignItems: 'center', gap: 2}}>
                 <Typography sx={{ color: 'hsl(240, 1%, 59%)', ml: 2}}>Mode:</Typography>
                 <Stack id="button" spacing={0.5} direction="row">
-                  <Button variant="outlined" size='small'>Timed (60)</Button>
-                  <Button variant="outlined" size='small'>Passage</Button>
+                  <Button
+                    onClick={() => handleMode('timed')}
+                    variant="outlined" size='small'
+                  >
+                    Timed (60)
+                  </Button>
+                  <Button
+                    onClick={() => handleMode('passage')}
+                    variant="outlined" size='small'
+                  >
+                    Passage
+                  </Button>
                 </Stack>
               </Box>
             </Box>

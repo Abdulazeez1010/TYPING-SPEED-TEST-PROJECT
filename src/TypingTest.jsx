@@ -23,9 +23,11 @@ const statConfig = [
 
 function TypingTest() {
   const [difficulty, setDifficulty] = useState('hard');
+  const [mode, setMode] = useState('timed');
   const [text, setText] = useState('')
   const [typed, setTyped] = useState('');
   const [timeLeft, setTimeLeft] = useState(TEST_DURATION);
+  const [timeSpent,setTimeSpent] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [testId, setTestId] = useState(0);
 
@@ -37,7 +39,9 @@ function TypingTest() {
     ? 100
     : Math.round(((typed.length - wrongLetters)/typed.length) * 100)
   
-  const minutesElapsed = (TEST_DURATION - timeLeft) / 60;
+  const minutesElapsed = mode === 'timed'
+    ? (TEST_DURATION - timeLeft) / 60 
+    : timeSpent / 60;
 
   const wpm = minutesElapsed > 0
     ? Math.round((typed.length / 5) / (minutesElapsed))
@@ -46,23 +50,32 @@ function TypingTest() {
   const stats = {
     wpm,
     accuracy,
-    time: timeLeft
+    time: mode === 'passage' ? timeSpent : timeLeft
   };
 
   useEffect(() => {
-    const passages = data[difficulty];
+    let passages;
+    if (mode === 'timed'){
+      passages = data[difficulty];
+      setTimeLeft(TEST_DURATION);
+    }
+    if (mode === 'passage'){
+      passages = data['hard'];
+      setTimeLeft(0);
+      setTimeSpent(0);
+    }
     const randomIndex = Math.floor(Math.random() * passages.length)
     setText(passages[randomIndex].text)
     setTyped('');
-    setTimeLeft(TEST_DURATION);
     setIsRunning(false);
-  }, [difficulty, testId]);
+  }, [difficulty, testId, mode]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
       // if (!isRunning && typed.length > 0) return;
       if (event.key === ' ') event.preventDefault();
-      if (timeLeft === 0) return;
+      if (mode === 'timed' && timeLeft === 0) return;
+      if (!isRunning && typed.length > 0) return;
 
       if (event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
         setTyped((prev) => prev + event.key);
@@ -73,7 +86,7 @@ function TypingTest() {
     
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [timeLeft]);
+  }, [timeLeft, mode]);
 
   useEffect(() => {
     if (typed.length === 1 && !isRunning) {
@@ -83,22 +96,32 @@ function TypingTest() {
 
   useEffect(() => {
     if (!isRunning) return;
+    let interval;
 
-    const interval = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev === 1) {
-          setIsRunning(false);
-          return 0;
-        }
-        return prev - 1;
-      });   
-    }, 1000);
-
+    if (mode === 'passage'){
+      interval = setInterval(() => {
+        setTimeSpent(prev => prev + 1);
+      }, 1000);
+    } else {
+        interval = setInterval(() => {
+          setTimeLeft(prev => {
+            if (prev === 1) {
+              setIsRunning(false);
+              return 0;
+            }
+            return prev - 1;
+          });   
+        }, 1000);
+      }
     return () => clearInterval(interval);
-  }, [isRunning]);
+  }, [isRunning, mode]);
 
-  const updateDifficulty = (lvl) => {
+  const handleDifficulty = (lvl) => {
     setDifficulty(lvl);
+  }
+
+  const handleMode = (mode) => {
+    setMode(mode)
   }
 
   const restart = () => {
@@ -128,7 +151,8 @@ function TypingTest() {
           <TypingMenuBar
             statConfig={statConfig}
             stats={stats}
-            updateDifficulty={updateDifficulty}
+            handleDifficulty={handleDifficulty}
+            handleMode={handleMode}
           />
           <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3}}/>
         
