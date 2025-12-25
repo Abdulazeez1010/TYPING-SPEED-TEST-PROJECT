@@ -55,6 +55,12 @@ function TypingTest() {
     time: mode === 'passage' ? timeSpent : timeLeft
   };
 
+  const results = [
+    {label: 'WPM', value: stats.wpm},
+    {label: 'Accuracy', value: `${stats.accuracy}%`},
+    {label: 'Characters', value: `${typed.length - wrongLetters}/${wrongLetters}`}
+  ]
+
   useEffect(() => {
     let passages;
     if (mode === 'timed'){
@@ -75,9 +81,10 @@ function TypingTest() {
   useEffect(() => {
     const handleKeyDown = (event) => {
       // if (!isRunning && typed.length > 0) return;
-      if (event.key === ' ') event.preventDefault();
+      if (event.key === ' ' && isRunning) event.preventDefault();
       if (mode === 'timed' && timeLeft === 0) return;
       if (!isRunning && typed.length > 0) return;
+      if (testEnd) return;
 
       if (event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
         setTyped((prev) => prev + event.key);
@@ -88,7 +95,7 @@ function TypingTest() {
     
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [timeLeft, mode]);
+  }, [timeLeft, mode, testEnd, isRunning]);
 
   useEffect(() => {
     if (typed.length === 1 && !isRunning) {
@@ -133,6 +140,7 @@ function TypingTest() {
   }
 
   const restart = () => {
+    setIsRunning(false)
     setTestEnd(false);
     setTestId(prev => prev + 1);
   }
@@ -193,10 +201,8 @@ function TypingTest() {
   } else {
     return (
       <TestComplete
-        statConfig={statConfig}
-        stats={stats}
-        typed={typed}
-        wrongLetters={wrongLetters} 
+        restart={restart}
+        results={results}
       />
     )
   }

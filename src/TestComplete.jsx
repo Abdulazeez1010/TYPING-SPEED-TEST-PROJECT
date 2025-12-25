@@ -2,82 +2,97 @@ import { Fragment, useEffect, useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-function TestComplete({statConfig, stats, typed, wrongLetters}){
+import TypingAppBar from "./TypingAppBar";
+
+import RestartIcon from './assets/images/icon-restart.svg'
+import CompletedIcon from './assets/images/icon-completed.svg'
+import './TestComplete.css';
+
+function TestComplete({ restart, results}){
     return(
       <>
         <Fragment>
         <CssBaseline />
         <Container fixed sx={{
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            // marginTop: 10
+            justifyContent: "center"
         }}>
             <Box sx={{
             bgcolor: 'hsl(0, 0%, 7%)',
             height: '90vh',
             width: '80vw',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: "center",
-            // justifyContent: "center",
-            padding: "1rem 5rem",
-            fontSize: 24,
-            // overflowY: 'auto'
+            padding: "1rem 5rem"
             }}
             >
+              <TypingAppBar/>
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: "center"
+              }}>
+                <Box sx={{m: '1.5rem'}}>
+                  <img src={CompletedIcon} alt='Completed Icon'/>
+                </Box>
               <Typography
-                gutterBottom
+                // gutterBottom
                 variant="h4"
                 component="div"
                 sx={{
                   color: 'hsl(0, 0%, 100%)',
+                  fontWeight: '600'
                 }}
               >
                 Test Complete!
               </Typography>
               <Typography
-                gutterBottom
                 variant="subtitle1"
                 component="div"
                 sx={{
                   color: 'hsl(240, 1%, 59%)'
                 }}
               >
-                Solid run! Keep pushing to beat your high score.
+                Solid run. Keep pushing to beat your high score.
               </Typography>
-              <div style={{display: 'flex'}}>
-              {statConfig.map(({label, id}) => {
-                if (label === 'Time'){
-                    label = 'Characters';
-                    stats[id] = `${typed.length - wrongLetters} / ${wrongLetters}`;
-                  }
-                return(
+              <Box sx={{display: 'flex', mt: 3}}>
+              {results.map(({label, value}) => (
                 <Box
-                key={id}
+                key={label}
                   sx={{
-                    width: '10rem',
+                    width: '8rem',
                     height: '5rem',
                     borderRadius: 2,
-                    border: '1px solid hsl(240, 1%, 59%)',
+                    border: '1px solid hsl(240, 1%, 20%)',
                     margin: 1,
+                    padding: 1,
                     color: 'hsl(240, 1%, 59%)',
-                    fontSize: '1rem',
-                    padding: '1rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-start'
                   }}
                 >
                   {label}
-                  <Typography component="div" >{stats[id]}</Typography>
+                  <Typography sx={{fontWeight: '800'}}>
+                    {value}
+                  </Typography>
                 </Box>
                 )
-              })}
-              </div>
-              
+              )}
+              </Box>
+
+              <Box 
+                id='TestComplete-button'
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  m: '0.5rem',
+                  }}
+                >
+                <Button onClick={restart} >
+                  Go Again <img style={{filter: 'invert(1)'}} src={RestartIcon} alt='Restart'/>
+                </Button>
+              </Box>
+              </Box>
             </Box>
         </Container>
         </Fragment>        

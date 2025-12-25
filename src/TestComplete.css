@@ -1,0 +1,17 @@
+#TestComplete-button Button{
+    border-radius: 10px;
+    text-transform: none;
+    color: hsl(0, 0%, 7%);
+    background-color: hsl(0, 0%, 100%);
+    font-weight: 600;
+    font-size: medium;
+    margin: 2rem;
+    /* background-color: white; */
+    /* opacity: 0.75; */    
+}
+
+#TestComplete-button img {
+    width: 1rem;
+    height: 1rem;
+    margin: 0.5rem;
+}
