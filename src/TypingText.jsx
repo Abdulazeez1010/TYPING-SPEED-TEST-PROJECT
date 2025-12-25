@@ -21,7 +21,6 @@ function TypingText({text, typed, isRunning }) {
               classes += normalizeChar(typed[index]) === normalizeChar(char) ? ` correct` : ` error`
             }
 
-            
             return (
               <span key={charIndex} className='char-wrapper'>
                 {isActive && <span  className='cursor'/>}

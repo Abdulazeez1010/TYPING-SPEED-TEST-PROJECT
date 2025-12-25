@@ -10,6 +10,7 @@ import RestartIcon from './assets/images/icon-restart.svg'
 import TypingText from "./TypingText";
 import TypingAppBar from "./TypingAppBar";
 import TypingMenuBar from './TypingMenuBar';
+import TestComplete from './TestComplete';
 
 import './TypingTest.css';
 
@@ -30,6 +31,7 @@ function TypingTest() {
   const [timeSpent,setTimeSpent] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [testId, setTestId] = useState(0);
+  const [testEnd, setTestEnd] = useState(false);
 
   const wrongLetters = typed
     .split("")
@@ -92,10 +94,16 @@ function TypingTest() {
     if (typed.length === 1 && !isRunning) {
       setIsRunning(true);
     }
+    if ((typed.length === text.length && isRunning)
+      || (mode === 'timed' && timeLeft === 0)) {
+      setTestEnd(true);
+      setIsRunning(false)
+    }
   }, [typed, isRunning]);
 
   useEffect(() => {
     if (!isRunning) return;
+    if(testEnd) return;
     let interval;
 
     if (mode === 'passage'){
@@ -125,61 +133,74 @@ function TypingTest() {
   }
 
   const restart = () => {
+    setTestEnd(false);
     setTestId(prev => prev + 1);
   }
 
-  return (
-    <>
-    <Fragment>
-      <CssBaseline />
-      <Container fixed sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        // marginTop: 10
-      }}>
-        <Box sx={{
-          bgcolor: 'hsl(0, 0%, 7%)',
-          height: '90vh',
-          width: '80vw',
-          padding: "1rem 5rem",
-          fontSize: 24,
-          // overflowY: 'auto'
-          }}
-        >
-          <TypingAppBar/>
-          <TypingMenuBar
-            statConfig={statConfig}
-            stats={stats}
-            handleDifficulty={handleDifficulty}
-            handleMode={handleMode}
-          />
-          <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3}}/>
-        
-          <TypingText
-            text={text}
-            typed={typed}
-            isRunning={isRunning}
-          />
-          <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3}}/>
-          <div 
-            id='TypingTest-button'
-            style={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              margin: '0.5rem'
-              }}
-            >
-            <Button onClick={restart} >
-              Restart Test <img src={RestartIcon} alt='Typing Test Logo'/>
-            </Button>
-          </div>
-        </Box>
-      </Container>
-    </Fragment>        
-    </>
-  )
+  if (!testEnd){
+    return (
+      <>
+      <Fragment>
+        <CssBaseline />
+        <Container fixed sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          // marginTop: 10
+        }}>
+          <Box sx={{
+            bgcolor: 'hsl(0, 0%, 7%)',
+            height: '90vh',
+            width: '80vw',
+            padding: "1rem 5rem",
+            fontSize: 24,
+            // overflowY: 'auto'
+            }}
+          >
+            <TypingAppBar/>
+            <TypingMenuBar
+              statConfig={statConfig}
+              stats={stats}
+              handleDifficulty={handleDifficulty}
+              handleMode={handleMode}
+            />
+            <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3}}/>
+          
+            <TypingText
+              text={text}
+              typed={typed}
+              isRunning={isRunning}
+            />
+            <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3}}/>
+            <div 
+              id='TypingTest-button'
+              style={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                margin: '0.5rem'
+                }}
+              >
+              <Button onClick={restart} >
+                Restart Test <img src={RestartIcon} alt='Typing Test Logo'/>
+              </Button>
+            </div>
+          </Box>
+        </Container>
+      </Fragment>        
+      </>
+    )
+  } else {
+    return (
+      <TestComplete
+        statConfig={statConfig}
+        stats={stats}
+        typed={typed}
+        wrongLetters={wrongLetters} 
+      />
+    )
+  }
+  
 }
 
 export default TypingTest;
