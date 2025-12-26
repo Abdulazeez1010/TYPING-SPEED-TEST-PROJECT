@@ -11,7 +11,7 @@ import RestartIcon from './assets/images/icon-restart.svg'
 import CompletedIcon from './assets/images/icon-completed.svg'
 import './TestComplete.css';
 
-function TestComplete({ restart, results, personalBest, stats}){
+function TestComplete({ restart, results, personalBest, stats, testOutcome}){
     return(
       <>
         <Fragment>
@@ -45,7 +45,7 @@ function TestComplete({ restart, results, personalBest, stats}){
                   fontWeight: '600'
                 }}
               >
-                Test Complete!
+                {testOutcome.title}
               </Typography>
               <Typography
                 variant="subtitle1"
@@ -54,7 +54,7 @@ function TestComplete({ restart, results, personalBest, stats}){
                   color: 'hsl(240, 1%, 59%)'
                 }}
               >
-                Solid run. Keep pushing to beat your high score.
+                {testOutcome.feedback}
               </Typography>
               <Box sx={{display: 'flex', mt: 3}}>
               {results.map(({label, value}) => (
@@ -89,7 +89,7 @@ function TestComplete({ restart, results, personalBest, stats}){
                   }}
                 >
                 <Button onClick={restart} >
-                  Go Again <img style={{filter: 'invert(1)'}} src={RestartIcon} alt='Restart'/>
+                  {testOutcome.actionText} <img style={{filter: 'invert(1)'}} src={RestartIcon} alt='Restart'/>
                 </Button>
               </Box>
               </Box>

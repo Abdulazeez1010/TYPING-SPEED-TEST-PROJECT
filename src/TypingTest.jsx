@@ -22,8 +22,26 @@ const statConfig = [
     { id: 'time', label : 'Time', color: 'hsl(49, 85%, 70%)', unit: ''}
 ];
 
+const testOutcomeMessages = {
+  completed : {
+    title: 'Test Complete!',
+    feedback: "Solid run. Keep pushing to beat your high score.",
+    actionText: "Go Again"
+  },
+  baseline : {
+    title: 'Baseline Established!', 
+    feedback: "You've set the bar. Now the real challenge begins-time to beat it.",
+    actionText: "Beat This Score"
+  },
+  newHighScore : {
+    title: 'High Score Smashed!',
+    feedback: "You're getting faster. That was incredible typing.",
+    actionText: "Beat This Score"
+  }
+};
+
 function TypingTest() {
-  const saved = Number(window.localStorage.getItem("personalBest")) || 0;
+  const saved = Number(window.localStorage.getItem("personalBest")) || null;
 
   const [difficulty, setDifficulty] = useState('hard');
   const [mode, setMode] = useState('timed');
@@ -35,6 +53,7 @@ function TypingTest() {
   const [testId, setTestId] = useState(0);
   const [testEnd, setTestEnd] = useState(false);
   const [personalBest, setPersonalBest] = useState(saved);
+  const [testOutcome, setTestOutcome] = useState({});
 
   const wrongLetters = typed
     .split("")
@@ -65,8 +84,8 @@ function TypingTest() {
   ]
 
   useEffect(() =>{
-    if (localStorage !== null){
-      localStorage.setItem("personalBest", Number(personalBest))
+    if (personalBest !== null){
+      localStorage.setItem("personalBest", personalBest)
     }
   }, [personalBest])
 
@@ -141,13 +160,27 @@ function TypingTest() {
 
   useEffect(() => {
     if (!testEnd) return;
-    setPersonalBest(prev => 
-      wpm > prev ? wpm : prev
-    );
+
+    let message;
+    let newBest = personalBest;
+
+    if (personalBest === null){
+      message = testOutcomeMessages.baseline;
+      newBest = wpm;
+    } else if (wpm > personalBest){
+      message = testOutcomeMessages.newHighScore;
+      newBest = wpm;
+    } else {
+      message = testOutcomeMessages.completed;
+    }
+
+    setPersonalBest(newBest);
+    setTestOutcome(message);
   }, [testEnd])
 
   const handleDifficulty = (lvl) => {
     setDifficulty(lvl);
+    setMode('timed');
   }
 
   const handleMode = (mode) => {
@@ -218,6 +251,7 @@ function TypingTest() {
         restart={restart}
         results={results}
         personalBest={personalBest}
+        testOutcome={testOutcome}
       />
     )
   }
