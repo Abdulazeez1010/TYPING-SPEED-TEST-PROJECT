@@ -11,7 +11,7 @@ import RestartIcon from './assets/images/icon-restart.svg'
 import CompletedIcon from './assets/images/icon-completed.svg'
 import './TestComplete.css';
 
-function TestComplete({ restart, results}){
+function TestComplete({ restart, results, personalBest, stats}){
     return(
       <>
         <Fragment>
@@ -27,7 +27,7 @@ function TestComplete({ restart, results}){
             padding: "1rem 5rem"
             }}
             >
-              <TypingAppBar/>
+              <TypingAppBar personalBest={personalBest} stats={stats}/>
               <Box sx={{
                 display: 'flex',
                 flexDirection: 'column',

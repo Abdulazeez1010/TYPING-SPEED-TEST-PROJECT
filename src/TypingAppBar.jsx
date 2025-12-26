@@ -4,7 +4,7 @@ import Container from '@mui/material/Container';
 import LargeTypingTestLogo from './assets/images/logo-large.svg';
 import personalBestLogo from './assets/images/icon-personal-best.svg';
 
-function TypingAppBar() {
+function TypingAppBar({personalBest}) {
   return (
         <Toolbar disableGutters sx={{
             justifyContent: 'space-between'
@@ -28,7 +28,7 @@ function TypingAppBar() {
                   component='span'
                   sx={{ ml: 1, color: 'hsl(0, 0%, 100%)'}}
                 >
-                  45 WPM
+                  {personalBest} WPM
                 </Typography>
             </Typography>
           </div>

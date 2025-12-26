@@ -23,6 +23,8 @@ const statConfig = [
 ];
 
 function TypingTest() {
+  const saved = Number(window.localStorage.getItem("personalBest")) || 0;
+
   const [difficulty, setDifficulty] = useState('hard');
   const [mode, setMode] = useState('timed');
   const [text, setText] = useState('')
@@ -32,6 +34,7 @@ function TypingTest() {
   const [isRunning, setIsRunning] = useState(false);
   const [testId, setTestId] = useState(0);
   const [testEnd, setTestEnd] = useState(false);
+  const [personalBest, setPersonalBest] = useState(saved);
 
   const wrongLetters = typed
     .split("")
@@ -61,6 +64,12 @@ function TypingTest() {
     {label: 'Characters', value: `${typed.length - wrongLetters}/${wrongLetters}`}
   ]
 
+  useEffect(() =>{
+    if (localStorage !== null){
+      localStorage.setItem("personalBest", Number(personalBest))
+    }
+  }, [personalBest])
+
   useEffect(() => {
     let passages;
     if (mode === 'timed'){
@@ -80,11 +89,10 @@ function TypingTest() {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      // if (!isRunning && typed.length > 0) return;
+      if (testEnd) return;
       if (event.key === ' ' && isRunning) event.preventDefault();
       if (mode === 'timed' && timeLeft === 0) return;
       if (!isRunning && typed.length > 0) return;
-      if (testEnd) return;
 
       if (event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
         setTyped((prev) => prev + event.key);
@@ -104,7 +112,7 @@ function TypingTest() {
     if ((typed.length === text.length && isRunning)
       || (mode === 'timed' && timeLeft === 0)) {
       setTestEnd(true);
-      setIsRunning(false)
+      setIsRunning(false);
     }
   }, [typed, isRunning]);
 
@@ -131,6 +139,13 @@ function TypingTest() {
     return () => clearInterval(interval);
   }, [isRunning, mode]);
 
+  useEffect(() => {
+    if (!testEnd) return;
+    setPersonalBest(prev => 
+      wpm > prev ? wpm : prev
+    );
+  }, [testEnd])
+
   const handleDifficulty = (lvl) => {
     setDifficulty(lvl);
   }
@@ -140,7 +155,6 @@ function TypingTest() {
   }
 
   const restart = () => {
-    setIsRunning(false)
     setTestEnd(false);
     setTestId(prev => prev + 1);
   }
@@ -165,7 +179,7 @@ function TypingTest() {
             // overflowY: 'auto'
             }}
           >
-            <TypingAppBar/>
+            <TypingAppBar personalBest={personalBest}/>
             <TypingMenuBar
               statConfig={statConfig}
               stats={stats}
@@ -203,6 +217,7 @@ function TypingTest() {
       <TestComplete
         restart={restart}
         results={results}
+        personalBest={personalBest}
       />
     )
   }
