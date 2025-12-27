@@ -1,0 +1,9 @@
+#StartOverlay-button {
+    border-radius: 10px;
+    text-transform: none;
+    color: hsl(0, 0%, 100%);
+    background-color: hsl(214, 100%, 55%);
+    font-weight: 400;
+    font-size: medium;
+    margin: 1rem;
+}

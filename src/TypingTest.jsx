@@ -11,6 +11,7 @@ import TypingText from "./TypingText";
 import TypingAppBar from "./TypingAppBar";
 import TypingMenuBar from './TypingMenuBar';
 import TestComplete from './TestComplete';
+import StartOverlay from './StartOverlay';
 
 import './TypingTest.css';
 
@@ -54,6 +55,7 @@ function TypingTest() {
   const [testEnd, setTestEnd] = useState(false);
   const [personalBest, setPersonalBest] = useState(saved);
   const [testOutcome, setTestOutcome] = useState({});
+  const [hasStarted, setHasStarted] = useState(false);
 
   const wrongLetters = typed
     .split("")
@@ -108,6 +110,10 @@ function TypingTest() {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
+      if(!hasStarted){
+        setHasStarted(true);
+        return;
+      }
       if (testEnd) return;
       if (event.key === ' ' && isRunning) event.preventDefault();
       if (mode === 'timed' && timeLeft === 0) return;
@@ -122,7 +128,7 @@ function TypingTest() {
     
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [timeLeft, mode, testEnd, isRunning]);
+  }, [timeLeft, mode, testEnd, isRunning, hasStarted]);
 
   useEffect(() => {
     if (typed.length === 1 && !isRunning) {
@@ -188,9 +194,14 @@ function TypingTest() {
   }
 
   const restart = () => {
+    setHasStarted(false);
     setTestEnd(false);
     setTestId(prev => prev + 1);
   }
+
+  const handleHasStarted = () => {
+    setHasStarted(true);
+  } 
 
   if (!testEnd){
     return (
@@ -221,12 +232,24 @@ function TypingTest() {
             />
             <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3}}/>
           
-            <TypingText
-              text={text}
-              typed={typed}
-              isRunning={isRunning}
-            />
-            <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3}}/>
+            <Box
+              sx={{
+                width: '100%',
+                height: '100%',
+                position: 'relative',
+                filter: hasStarted ? 'none' : 'blur(7px)',
+                transition: 'filter 0.3s ease'
+              }}
+            >
+              <TypingText
+                text={text}
+                typed={typed}
+                isRunning={isRunning}
+                hasStarted={hasStarted}
+              />
+            </Box>
+            {!hasStarted && <StartOverlay handleHasStarted={handleHasStarted} />}
+            {hasStarted && <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3}}/>}
             <div 
               id='TypingTest-button'
               style={{
@@ -236,9 +259,9 @@ function TypingTest() {
                 margin: '0.5rem'
                 }}
               >
-              <Button onClick={restart} >
+              {hasStarted && <Button onClick={restart} >
                 Restart Test <img src={RestartIcon} alt='Typing Test Logo'/>
-              </Button>
+              </Button>}
             </div>
           </Box>
         </Container>

@@ -1,12 +1,13 @@
 import Typography from '@mui/material/Typography';
 import './TypingText.css';
+
 import { normalizeChar } from './utils/normalizeChar';
 
-function TypingText({text, typed, isRunning }) {
-
+function TypingText({text, typed, isRunning, hasStarted }) {
   const words = text.split(/(\s+)/);
 
   return (
+    <>
     <div className='Typing-form-container'>
     {
       words.map((word, wordIndex) => (
@@ -41,7 +42,8 @@ function TypingText({text, typed, isRunning }) {
         </span>
       ))
     }
-    </div>    
+    </div>
+    </>    
   )
 }
 
