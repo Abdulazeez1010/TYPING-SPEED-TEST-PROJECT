@@ -6,6 +6,11 @@ import Divider from '@mui/material/Divider';
 import data from './data.json';
 import Button from '@mui/material/Button';
 import RestartIcon from './assets/images/icon-restart.svg'
+import StarPatternIconOne from './assets/images/pattern-star-1.svg';
+import StarPatternIconTwo from './assets/images/pattern-star-2.svg';
+import ConfettiPattern from './assets/images/pattern-confetti.svg';
+import CompletedIcon from './assets/images/icon-completed.svg';
+import NewPersonalBestIcon from './assets/images/icon-new-pb.svg';
 
 import TypingText from "./TypingText";
 import TypingAppBar from "./TypingAppBar";
@@ -26,18 +31,26 @@ const statConfig = [
 const testOutcomeMessages = {
   completed : {
     title: 'Test Complete!',
+    displayIcon: CompletedIcon,
     feedback: "Solid run. Keep pushing to beat your high score.",
-    actionText: "Go Again"
+    actionText: "Go Again",
+    patternOne: StarPatternIconOne,
+    patternTwo: StarPatternIconTwo
   },
   baseline : {
-    title: 'Baseline Established!', 
+    title: 'Baseline Established!',
+    displayIcon: CompletedIcon,
     feedback: "You've set the bar. Now the real challenge begins-time to beat it.",
-    actionText: "Beat This Score"
+    actionText: "Beat This Score",
+    patternOne: StarPatternIconOne,
+    patternTwo: StarPatternIconTwo
   },
   newHighScore : {
     title: 'High Score Smashed!',
+    displayIcon: NewPersonalBestIcon,
     feedback: "You're getting faster. That was incredible typing.",
-    actionText: "Beat This Score"
+    actionText: "Beat This Score",
+    confettiPattern: ConfettiPattern
   }
 };
 

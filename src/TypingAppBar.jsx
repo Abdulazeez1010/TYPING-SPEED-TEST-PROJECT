@@ -6,9 +6,12 @@ import personalBestLogo from './assets/images/icon-personal-best.svg';
 
 function TypingAppBar({personalBest}) {
   return (
-        <Toolbar disableGutters sx={{
+        <Toolbar
+          disableGutters
+          sx={{
             justifyContent: 'space-between'
-        }}>
+          }}
+        >
           <div>
             <img src={LargeTypingTestLogo} alt='Typing Test Logo'/>
           </div>

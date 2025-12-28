@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
@@ -7,8 +7,8 @@ import Typography from '@mui/material/Typography';
 
 import TypingAppBar from "./TypingAppBar";
 
-import RestartIcon from './assets/images/icon-restart.svg'
-import CompletedIcon from './assets/images/icon-completed.svg'
+import RestartIcon from './assets/images/icon-restart.svg';
+
 import './TestComplete.css';
 
 function TestComplete({ restart, results, personalBest, stats, testOutcome}){
@@ -19,22 +19,49 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome}){
         <Container fixed sx={{
             display: "flex",
             justifyContent: "center"
-        }}>
+          }}
+        >
             <Box sx={{
             bgcolor: 'hsl(0, 0%, 7%)',
             height: '90vh',
             width: '80vw',
-            padding: "1rem 5rem"
+            padding: "1rem 5rem",
+            position: 'relative'
             }}
             >
               <TypingAppBar personalBest={personalBest} stats={stats}/>
+              {testOutcome.patternOne && <Box sx={{
+                position: 'absolute',
+                right: '10%',
+                bottom: '35%'
+              }}
+              >
+                <img src={testOutcome.patternOne} alt="star1-pattern" />
+              </Box>}
+              {testOutcome.patternTwo && <Box sx={{
+                position: 'absolute',
+                left: '8%',
+                top: '25%'
+              }}
+              >
+                <img src={testOutcome.patternTwo} alt="star2-pattern" />
+              </Box>}
+              {testOutcome.confettiPattern && <Box sx={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                alignSelf: 'center'
+              }}
+              >
+                <img style={{width: '100%'}} src={testOutcome.confettiPattern} alt="confetti-pattern" />
+              </Box>}
               <Box sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: "center"
               }}>
                 <Box sx={{m: '1.5rem'}}>
-                  <img src={CompletedIcon} alt='Completed Icon'/>
+                  <img src={testOutcome.displayIcon} alt='Completed Icon'/>
                 </Box>
               <Typography
                 // gutterBottom
