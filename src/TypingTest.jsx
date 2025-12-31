@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import data from './data.json';
 import Button from '@mui/material/Button';
+import { useMediaQuery, useTheme } from '@mui/material';
 import RestartIcon from './assets/images/icon-restart.svg'
 import StarPatternIconOne from './assets/images/pattern-star-1.svg';
 import StarPatternIconTwo from './assets/images/pattern-star-2.svg';
@@ -26,6 +27,17 @@ const statConfig = [
     { id: 'wpm', label : 'WPM',  color: 'hsl(0, 0%, 100%)', unit: ''},
     { id: 'accuracy', label :'Accuracy',  color: 'hsl(354, 63%, 57%)', unit: '%'},
     { id: 'time', label : 'Time', color: 'hsl(49, 85%, 70%)', unit: ''}
+];
+
+const difficultyOptions = [
+  {label: 'Easy', value: 'easy'},
+  {label: 'Medium', value: 'medium'},
+  {label: 'Hard', value: 'hard'}
+];
+
+const modeOptions = [
+  {label: 'Timed (60)', value: 'timed'},
+  {label: 'Passage', value: 'passage'}
 ];
 
 const testOutcomeMessages = {
@@ -55,6 +67,9 @@ const testOutcomeMessages = {
 };
 
 function TypingTest() {
+  const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+
   const saved = Number(window.localStorage.getItem("personalBest")) || null;
 
   const [difficulty, setDifficulty] = useState('hard');
@@ -218,21 +233,22 @@ function TypingTest() {
 
   if (!testEnd){
     return (
-      <>
       <Fragment>
         <CssBaseline />
-        <Container fixed sx={{
+        <Container sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          // marginTop: 10
+          maxWidth: {xs: '100%', sm: '600px', md: '900px', lg: '1200px', xl: '1440px'},
+          width: '100%',
+          // height: '100%',
+          px: {xs: 1.5, sm: 3, md: 6},
         }}>
           <Box sx={{
             bgcolor: 'hsl(0, 0%, 7%)',
-            height: '90vh',
-            width: '80vw',
-            padding: "1rem 5rem",
-            fontSize: 24,
+            px: {xs: 2, sm: 4, md: 9},
+            py: {xs: 2, md: 4},
+            fontSize: {xs: '1.25rem', sm: '1.5rem', md: '1.5rem'},
             // overflowY: 'auto'
             }}
           >
@@ -242,16 +258,20 @@ function TypingTest() {
               stats={stats}
               handleDifficulty={handleDifficulty}
               handleMode={handleMode}
+              difficultyOptions={difficultyOptions}
+              modeOptions={modeOptions}
             />
-            <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3}}/>
+            <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3,}}/>
           
             <Box
               sx={{
                 width: '100%',
-                height: '100%',
+                maxHeight: '600px',
+                height: hasStarted ? '28rem' : '',
                 position: 'relative',
                 filter: hasStarted ? 'none' : 'blur(7px)',
-                transition: 'filter 0.3s ease'
+                transition: 'filter 0.3s ease',
+                // p:'0 1.5rem'
               }}
             >
               <TypingText
@@ -261,7 +281,10 @@ function TypingTest() {
                 hasStarted={hasStarted}
               />
             </Box>
-            {!hasStarted && <StartOverlay handleHasStarted={handleHasStarted} />}
+            {!hasStarted && <Box>
+              <StartOverlay handleHasStarted={handleHasStarted} />
+            </Box>}
+            {/* {!hasStarted && <StartOverlay handleHasStarted={handleHasStarted} />} */}
             {hasStarted && <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3}}/>}
             <div 
               id='TypingTest-button'
@@ -269,7 +292,8 @@ function TypingTest() {
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'center',
-                margin: '0.5rem'
+                marginTop: '1rem',
+                marginBottom: '4rem'
                 }}
               >
               {hasStarted && <Button onClick={restart} >
@@ -278,8 +302,7 @@ function TypingTest() {
             </div>
           </Box>
         </Container>
-      </Fragment>        
-      </>
+      </Fragment>
     )
   } else {
     return (

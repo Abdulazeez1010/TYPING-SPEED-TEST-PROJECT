@@ -27,11 +27,12 @@ function TypingText({text, typed, isRunning, hasStarted }) {
                 {isActive && <span  className='cursor'/>}
                 <Typography
                   className={classes}
-                  gutterBottom
+                  // gutterBottom
                   variant="h4"
                   component="span"
                   sx={{
-                    fontFamily: "Sora, sans-serif"
+                    fontFamily: "Sora, sans-serif",
+                    fontSize: {xs: '1.25rem', sm: '1.5rem', md: '2rem'}
                   }}
                 >
                   {char === " " ? "\u00A0" : char}

@@ -15,8 +15,13 @@ function StartOverlay({handleHasStarted}){
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 10,
-            height: '90vh',
-            width: '80vw',
+            maxHeight: '600px',
+            alignSelf: 'center',
+            height: '500px',
+            maxWidth: '1200px',
+            width: '1000px',
+            // height: '90vh',
+            // width: '80vw',
             justifySelf: 'center',
             textAlign: 'center'
           }}

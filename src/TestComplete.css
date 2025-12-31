@@ -5,7 +5,8 @@
     background-color: hsl(0, 0%, 100%);
     font-weight: 600;
     font-size: medium;
-    margin: 2rem;
+    margin: 3rem;
+    padding: 0.5rem;
     /* background-color: white; */
     /* opacity: 0.75; */    
 }
