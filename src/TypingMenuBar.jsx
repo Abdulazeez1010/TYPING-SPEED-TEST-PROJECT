@@ -2,32 +2,42 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 
 import InputLabel from '@mui/material/InputLabel';
+import ResponsiveSelector from './ResponsiveSelector';
 
 import './TypingMenuBar.css'
+import { useMediaQuery, useTheme } from '@mui/material';
 
-function TypingMenuBar({statConfig, stats, handleDifficulty, handleMode, difficultyOptions, modeOptions}){
+function TypingMenuBar({
+  statConfig,
+  stats,
+  handleDifficulty,
+  handleMode,
+  difficultyOptions,
+  modeOptions,
+  mode,
+  difficulty
+}){
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     return (
         <>
           <Toolbar disableGutters sx={{
             display: 'flex',
-            justifyContent: {xs: 'center', sm: 'center', md: 'space-between'},
+            justifyContent: {xs: 'center', md: 'space-between'},
             flexWrap: 'wrap',
-            flexGrow: 1,
-            m: 0
+            flexDirection: {xs: 'row', md: 'row', lg: 'row'},
+            // flexGrow: 1,
+            m: 0,
+            maxWidth: '1440px'
           }}>
             <Box
               sx={{
                 display: 'flex',
                 justifyContent:'space-between',
-                flexDirection: {xs: 'column', sm: 'column'},
+                // flexDirection: {xs: 'column', md: 'row'},
+                width: {xs: '100%', md: '25%', lg: '30%'}
               }}
             >
               <Box
@@ -39,119 +49,91 @@ function TypingMenuBar({statConfig, stats, handleDifficulty, handleMode, difficu
                   },
                   textAlign: 'center',
                   width: '100%',
-                  gap: {xs: 1, sm: 3}
-                }}>
-                {statConfig.map(({id, label, color, unit}) => (
+                  gap: {xs: 1, sm: 0.1}
+                }}
+              >
+                {statConfig.map(({id, label, color, unit}, index) => (
                   <Box
                     key={id}
                     sx={{
                       display: 'flex',
-                      flexDirection: {xs: 'column', sm: 'row'},
-                      alignItems: {sm: 'center'},
-                      gap: {xs: 0.25, sm: 0.75},
-                      minWidth: {xs: "100%", sm: 'auto'}
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 0.1
                     }}
                   >
-                    <Typography 
+                    <Box  
                       key={id}
                       sx={{
-                        color: 'hsl(240, 1%, 59%)'
+                        display: 'flex',
+                        flexDirection: {xs: 'column', sm: 'row'},
+                        alignItems: {sm: 'center'},
+                        justifyContent: 'center',
+                        gap: {xs: 0.25, sm: 0.75},
                       }}
                     >
-                      {label}:
-                    </Typography>
-                    <Typography 
-                      sx={{color: color, fontWeight: '700'}}
-                    >
-                      {stats[id]}{unit}
-                    </Typography>
-                    {/* {id !== 'time' &&
+                      <Typography 
+                        key={id}
+                        sx={{color: 'hsl(240, 1%, 59%)'}}
+                      >
+                        {label}:
+                      </Typography>
+                      <Typography 
+                        sx={{color: color, fontWeight: '700', fontSize: {xs: '1.5rem', sm: '1rem'}}}
+                      >
+                        {stats[id]}{unit}
+                      </Typography>
+                    </Box>
+                    {index !== statConfig.length - 1 &&
                       <Divider
                         orientation="vertical"
-                        sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.6, padding: 1.5}}
+                        flexItem
+                        sx={{
+                          borderColor: 'hsl(240, 1%, 59%)',
+                          opacity: 0.6, 
+                          pr: {xs: 2.5, sm: 5, md: 2},
+                          mr: {md: 1},
+                        }}
                       />
-                      } */}
+                      }
                   </Box>
                 ))}
               </Box>
             </Box>
+
+            {/* Difficulty and Mode section */}
             <Box
               sx={{
                 display: {xs: 'flex', sm: 'flex', md: 'flex'},
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 ml: 2,
+                width: {xs: "100%", md:'50%', lg: '60%', xl: '50%'}
               }}
             >
-              <Box sx={{display: { xs: 'none', sm: 'none', md: 'flex'}, alignItems: 'center', gap: 2}}>
-                <Typography sx={{ color: 'hsl(240, 1%, 59%)'}}>Difficulty:</Typography>
-                <Stack id="button" spacing={0.5} direction="row">
-                  {difficultyOptions.map(({value, label}) => (
-                    <Button
-                      key={value}
-                      onClick={() => handleDifficulty(value)}
-                      variant="outlined"
-                      size='small'
-                    >
-                      {label}
-                    </Button>
-                  ))}
-                </Stack>
-              </Box>
-              <Box sx={{display: { xs: 'flex', sm: 'flex', md: 'none'}, alignItems: 'center', gap: 2}}>
-                  <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                    <Select
-                      labelId="demo-simple-select-standard-label"
-                      id="demo-simple-select-standard"
-                      label="Difficulty"
-                      sx={{color: 'white'}}
-                    >{difficultyOptions.map(({value, label}) => (
-                      <MenuItem
-                        sx={{color: 'white'}}
-                        value={value}
-                        onClick={() => handleDifficulty(value)}
-                      >
-                        {label}
-                      </MenuItem>
-                    ))}
-                    </Select>
-                  </FormControl>
-                </Box>
-              <Divider orientation="vertical" sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.6, padding: 1}}/>
-              <Box sx={{display: { xs: 'none', sm: 'none', md: 'flex'}, alignItems: 'center', gap: 2}}>
-                <Typography sx={{ color: 'hsl(240, 1%, 59%)', ml: 2}}>Mode:</Typography>
-                <Stack id="button" spacing={0.5} direction="row">
-                  {modeOptions.map(({label, value}) => (
-                    <Button
-                      key={value}
-                      onClick={() => handleMode(value)}
-                      variant="outlined"
-                      size='small'
-                    >
-                      {label}
-                    </Button>
-                  ))}
-                </Stack>
-              </Box>
-              <Box sx={{display: { xs: 'flex', sm: 'flex', md: 'none'}, alignItems: 'center', gap: 2}}>
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                  <Select
-                    labelId="demo-simple-select-standard-label"
-                    id="demo-simple-select-standard"
-                    label="Mode"
-                    sx={{color: 'white'}}
-                  >{modeOptions.map(({value, label}) => (
-                    <MenuItem
-                      sx={{color: 'white'}}
-                      value={value}
-                      onClick={() => handleMode(value)}
-                    >
-                      {label}
-                    </MenuItem>
-                  ))}
-                  </Select>
-                </FormControl>
-              </Box>
+              <ResponsiveSelector
+                label = "Difficulty"
+                value = {difficulty}
+                options = {difficultyOptions}
+                onChange={handleDifficulty}
+              />
+              {!isMobile && <Divider
+                flexItem
+                orientation="vertical"
+                sx={{
+                  borderColor: 'hsl(240, 1%, 59%)',
+                  opacity: 0.6,
+                  pr: { md: 1},
+                  my: {md: 1, lg: 0},
+                  mr: 1
+                }}
+              />}
+              <ResponsiveSelector
+                label = "Mode"
+                value = {mode}
+                options = {modeOptions}
+                onChange={handleMode}
+              />
             </Box>
         </Toolbar>
         </>

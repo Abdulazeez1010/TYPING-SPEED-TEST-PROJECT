@@ -260,6 +260,8 @@ function TypingTest() {
               handleMode={handleMode}
               difficultyOptions={difficultyOptions}
               modeOptions={modeOptions}
+              mode={mode}
+              difficulty={difficulty}
             />
             <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3,}}/>
           
