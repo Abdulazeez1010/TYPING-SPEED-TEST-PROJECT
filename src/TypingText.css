@@ -1,9 +1,11 @@
-.Typing-form-container {
+.Typing-text-container {
+    -webkit-overflow-scrolling: touch;
     margin-top: 2rem;
+    margin-bottom: 2rem;
     /* padding: 1rem 2rem; */
     background-color: hsl(0, 0%, 7%);
     border-radius: 8px;
-    height: 60vh;
+    /* height: 75vh; */
     /* overflow-y: auto; */
     font-size: 1.5rem;
     line-height: 1.6;

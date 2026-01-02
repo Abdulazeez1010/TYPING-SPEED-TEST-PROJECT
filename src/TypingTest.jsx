@@ -242,12 +242,13 @@ function TypingTest() {
           maxWidth: {xs: '100%', sm: '600px', md: '900px', lg: '1200px', xl: '1440px'},
           width: '100%',
           // height: '100%',
+          boxSizing:'border-box',
           px: {xs: 1.5, sm: 3, md: 6},
         }}>
           <Box sx={{
             bgcolor: 'hsl(0, 0%, 7%)',
             px: {xs: 2, sm: 4, md: 9},
-            py: {xs: 2, md: 4},
+            // py: {xs: 2, md: 4},
             fontSize: {xs: '1.25rem', sm: '1.5rem', md: '1.5rem'},
             // overflowY: 'auto'
             }}
@@ -268,11 +269,10 @@ function TypingTest() {
             <Box
               sx={{
                 width: '100%',
-                maxHeight: '600px',
-                height: hasStarted ? '28rem' : '',
                 position: 'relative',
                 filter: hasStarted ? 'none' : 'blur(7px)',
                 transition: 'filter 0.3s ease',
+                overflow: 'hidden'
                 // p:'0 1.5rem'
               }}
             >
@@ -286,22 +286,25 @@ function TypingTest() {
             {!hasStarted && <Box>
               <StartOverlay handleHasStarted={handleHasStarted} />
             </Box>}
-            {/* {!hasStarted && <StartOverlay handleHasStarted={handleHasStarted} />} */}
             {hasStarted && <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3}}/>}
-            <div 
+            <Box 
               id='TypingTest-button'
-              style={{
+              sx={{
+                position: 'sticky',
                 width: '100%',
+                py: 1,
                 display: 'flex',
                 justifyContent: 'center',
-                marginTop: '1rem',
-                marginBottom: '4rem'
+                // marginTop: '1rem',
+                // marginBottom: '1rem'
+                // bottom: 0
+                my: '1rem'
                 }}
               >
               {hasStarted && <Button onClick={restart} >
                 Restart Test <img src={RestartIcon} alt='Typing Test Logo'/>
               </Button>}
-            </div>
+            </Box>
           </Box>
         </Container>
       </Fragment>

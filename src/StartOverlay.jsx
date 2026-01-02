@@ -17,11 +17,9 @@ function StartOverlay({handleHasStarted}){
             zIndex: 10,
             maxHeight: '600px',
             alignSelf: 'center',
-            height: '500px',
-            maxWidth: '1200px',
-            width: '1000px',
-            // height: '90vh',
-            // width: '80vw',
+            height: '100%',
+            maxWidth: {xs: '100%', sm: '488px', md: '660px', lg: '960px', xl: '1200px'},
+            width: '100%',
             justifySelf: 'center',
             textAlign: 'center'
           }}
