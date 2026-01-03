@@ -12,18 +12,12 @@ function TypingText({text, typed, isRunning, hasStarted }) {
     <Box
       className='Typing-text-container'
       sx={{
-        maxHeight: {
-          xs: `calc(100vh - 320px)`,
-          md: 'none'
-        },
-        // height: {xs: '75vh', md: '90vh'},
         overflowY: {xs: 'auto', md: 'visible'},
-        // pr: {xs: 1, md: 0}
         width: '100%',
         maxWidth: '100%',
         boxSizing: 'border-box',
-        // height: {xs: 'auto', md: 'auto'}
-        height: '60vh'
+        height: '100%',
+        pt: 1
       }}
     >
     {
@@ -49,7 +43,7 @@ function TypingText({text, typed, isRunning, hasStarted }) {
                   component="span"
                   sx={{
                     fontFamily: "Sora, sans-serif",
-                    fontSize: {xs: '2rem', sm: '1.5rem', md: '2rem', lg: '2.5rem'}
+                    fontSize: {xs: '1.89rem', sm: '2rem', md: '2rem', lg: '2rem', xl: '2.5rem'}
                   }}
                 >
                   {char === " " ? "\u00A0" : char}

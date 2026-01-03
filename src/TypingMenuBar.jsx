@@ -24,20 +24,18 @@ function TypingMenuBar({
     return (
         <>
           <Toolbar disableGutters sx={{
+            width: '100%',
             display: 'flex',
-            justifyContent: {xs: 'center', md: 'space-between'},
-            flexWrap: 'wrap',
-            flexDirection: {xs: 'row', md: 'row', lg: 'row'},
-            // flexGrow: 1,
-            m: 0,
-            maxWidth: '1440px'
+            flexDirection: {xs: 'column', md:'row'},
+            justifyContent: 'space-between',
+            alignItems: {xs: 'stretch', md: 'center'},
+            gap: {xs: 1.5, md: 0}
           }}>
             <Box
               sx={{
                 display: 'flex',
-                justifyContent:'space-between',
-                // flexDirection: {xs: 'column', md: 'row'},
-                width: {xs: '100%', md: '25%', lg: '30%'}
+                width: {xs: '100%', md: 'auto'},
+                justifyContent: {xs: 'center', md: 'flex-start'}
               }}
             >
               <Box
@@ -47,9 +45,9 @@ function TypingMenuBar({
                     xs: 'repeat(3, 1fr)',
                     sm: 'repeat(3, auto)'
                   },
-                  textAlign: 'center',
+                  gap: {xs: 1, sm: 2},
                   width: '100%',
-                  gap: {xs: 1, sm: 0.1}
+                  maxWidth: 'fit-content'
                 }}
               >
                 {statConfig.map(({id, label, color, unit}, index) => (
@@ -104,11 +102,12 @@ function TypingMenuBar({
             {/* Difficulty and Mode section */}
             <Box
               sx={{
-                display: {xs: 'flex', sm: 'flex', md: 'flex'},
-                justifyContent: 'space-between',
+                display: 'flex',
+                justifyContent: {xs: 'center', md: 'flex-end'},
                 alignItems: 'center',
-                ml: 2,
-                width: {xs: "100%", md:'50%', lg: '60%', xl: '50%'}
+                width: {xs: "100%", md:'auto'},
+                alignItems: 'center',
+                gap: 1.5
               }}
             >
               <ResponsiveSelector

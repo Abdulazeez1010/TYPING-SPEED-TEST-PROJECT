@@ -237,20 +237,22 @@ function TypingTest() {
         <CssBaseline />
         <Container sx={{
           display: "flex",
-          alignItems: "center",
           justifyContent: "center",
           maxWidth: {xs: '100%', sm: '600px', md: '900px', lg: '1200px', xl: '1440px'},
           width: '100%',
-          // height: '100%',
-          boxSizing:'border-box',
-          px: {xs: 1.5, sm: 3, md: 6},
+          height: '100%',
+          px: {xs: 1.5, sm: 3, md: 3, lg: 6, xl: 9},
         }}>
           <Box sx={{
             bgcolor: 'hsl(0, 0%, 7%)',
-            px: {xs: 2, sm: 4, md: 9},
-            // py: {xs: 2, md: 4},
+            width: '100%',
+            maxWidth: {xs: '100%', sm: '600px', md: '900px', lg: '1200px', xl: '1440px'},
+            display: 'flex',
+            flexDirection: 'column',
             fontSize: {xs: '1.25rem', sm: '1.5rem', md: '1.5rem'},
             // overflowY: 'auto'
+            boxSizing:'border-box',
+            px: {xs: 1.5, sm: 3, md: 10, lg: 12, xl: 15},
             }}
           >
             <TypingAppBar personalBest={personalBest}/>
@@ -268,12 +270,11 @@ function TypingTest() {
           
             <Box
               sx={{
-                width: '100%',
+                flex: 1,
                 position: 'relative',
                 filter: hasStarted ? 'none' : 'blur(7px)',
                 transition: 'filter 0.3s ease',
                 overflow: 'hidden'
-                // p:'0 1.5rem'
               }}
             >
               <TypingText
@@ -295,10 +296,7 @@ function TypingTest() {
                 py: 1,
                 display: 'flex',
                 justifyContent: 'center',
-                // marginTop: '1rem',
-                // marginBottom: '1rem'
-                // bottom: 0
-                my: '1rem'
+                py: '1rem'
                 }}
               >
               {hasStarted && <Button onClick={restart} >
