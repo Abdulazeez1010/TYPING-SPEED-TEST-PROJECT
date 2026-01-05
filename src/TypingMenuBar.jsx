@@ -2,12 +2,11 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-
-import InputLabel from '@mui/material/InputLabel';
-import ResponsiveSelector from './ResponsiveSelector';
-
-import './TypingMenuBar.css'
 import { useMediaQuery, useTheme } from '@mui/material';
+
+import ResponsiveSelector from './ResponsiveSelector';
+import './TypingMenuBar.css'
+
 
 function TypingMenuBar({
   statConfig,
@@ -29,13 +28,17 @@ function TypingMenuBar({
             flexDirection: {xs: 'column', md:'row'},
             justifyContent: 'space-between',
             alignItems: {xs: 'stretch', md: 'center'},
-            gap: {xs: 1.5, md: 0}
+            gap: {xs: 1.5, md: 0},
+            columnGap: {xs: 3, lg: 6}
           }}>
+
+            {/* Stats section */}
             <Box
               sx={{
                 display: 'flex',
                 width: {xs: '100%', md: 'auto'},
-                justifyContent: {xs: 'center', md: 'flex-start'}
+                justifyContent: {xs: 'center', md: 'flex-start'},
+                flexShrink: 0
               }}
             >
               <Box
@@ -105,9 +108,9 @@ function TypingMenuBar({
                 display: 'flex',
                 justifyContent: {xs: 'center', md: 'flex-end'},
                 alignItems: 'center',
-                width: {xs: "100%", md:'auto'},
-                alignItems: 'center',
-                gap: 1.5
+                width: {xs: "100%", md: 'auto'},
+                gap: {lg: 1.5},
+                flexShrink: 0
               }}
             >
               <ResponsiveSelector

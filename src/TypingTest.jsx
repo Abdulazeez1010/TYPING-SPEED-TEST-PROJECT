@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, useRef } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
@@ -69,6 +69,8 @@ const testOutcomeMessages = {
 function TypingTest() {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const inputRef = useRef(null);
 
   const saved = Number(window.localStorage.getItem("personalBest")) || null;
 
@@ -225,24 +227,50 @@ function TypingTest() {
     setHasStarted(false);
     setTestEnd(false);
     setTestId(prev => prev + 1);
+    if(inputRef.current){
+      inputRef.current.value = '';
+    }
   }
 
   const handleHasStarted = () => {
     setHasStarted(true);
+    inputRef.current?.focus();
   } 
 
   if (!testEnd){
     return (
       <Fragment>
         <CssBaseline />
-        <Container sx={{
-          display: "flex",
-          justifyContent: "center",
-          maxWidth: {xs: '100%', sm: '600px', md: '900px', lg: '1200px', xl: '1440px'},
-          width: '100%',
-          height: '100%',
-          px: {xs: 1.5, sm: 3, md: 3, lg: 6, xl: 9},
-        }}>
+        <Container
+          disableGutters 
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            maxWidth: {xs: '100%', sm: '600px', md: '900px', lg: '1200px', xl: '1440px'},
+            width: '100%',
+            height: '100%',
+            px: {xs: 0, sm: 2, md: 3, lg: 6, xl: 9},
+          }}
+        >
+          <input
+            ref={inputRef}
+            type='text'
+            inputMode='text'
+            autoComplete='off'
+            autoCorrect='off'
+            spellCheck={false}
+            style={{
+              position: 'absolute',
+              opacity: 0,
+              pointerEvents: 'none',
+              height: 0,
+              width: 0
+            }}
+            onChange={(e) => {
+              const value = e.target.value;
+              setTyped(prev => prev + value.slice(prev.length));
+            }}
+          />
           <Box sx={{
             bgcolor: 'hsl(0, 0%, 7%)',
             width: '100%',
@@ -252,7 +280,7 @@ function TypingTest() {
             fontSize: {xs: '1.25rem', sm: '1.5rem', md: '1.5rem'},
             // overflowY: 'auto'
             boxSizing:'border-box',
-            px: {xs: 1.5, sm: 3, md: 10, lg: 12, xl: 15},
+            px: {xs: 0.75, sm: 3, md: 6, lg: 10, xl: 15},
             }}
           >
             <TypingAppBar personalBest={personalBest}/>
@@ -293,7 +321,7 @@ function TypingTest() {
               sx={{
                 position: 'sticky',
                 width: '100%',
-                py: 1,
+                // py: 1,
                 display: 'flex',
                 justifyContent: 'center',
                 py: '1rem'
