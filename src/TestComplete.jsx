@@ -20,55 +20,81 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome}){
       <>
         <Fragment>
         <CssBaseline />
-        <Container sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            maxWidth: {xs: '100%', sm: '600px', md: '900px', lg: '1200px'},
+        <Container
+          disableGutters
+          maxWidth={false} 
+          sx={{
             width: '100%',
-            height: '100%',
-            // px: {xs: 1.5, sm: 3, md: 6}
+            minHeight: {xs: '100dvh', md: 'auto'},
+            display: "flex",
+            justifyContent: "center",
+            maxWidth: {xs: '100%', sm: '600px', md: '900px', lg: '1200px', xl: '1440px'},
+            px: {xs: 0, sm: 2, md: 3, lg: 6, xl: 9},
           }}
         >
             <Box sx={{
               bgcolor: 'hsl(0, 0%, 7%)',
-              px: {xs: 2, sm: 4, md: 9},
+              display: 'flex',
+              flexDirection: 'column',
+              boxSizing: 'border-box',
               py: {xs: 2, md: 4},
               fontSize: {xs: '1.25rem', sm: '1.5rem', md: '1.5rem'},
               position: 'relative',
               width: '100%',
-              height: '100%'
+              minHeight: {xs: '100dvh', md: 'auto'},
+              px: {xs: 2.5, md: 6, lg: 10, xl: 15},
             }}
             >
               <TypingAppBar personalBest={personalBest} stats={stats}/>
               {testOutcome.patternOne && <Box sx={{
                 position: 'absolute',
-                display: {xs: 'none', md: 'block'},
-                right: '8%',
-                bottom: '45%'
+                display: 'block',
+                right: {xs: '0%', md: '8%'},
+                bottom: {xs: '3%', md: '45%'}
               }}
               >
-                <img style={{width: '80%'}} src={testOutcome.patternOne} alt="star1-pattern" />
+                <Box
+                  component="img"
+                  src={testOutcome.patternOne}
+                  alt="star1-pattern"
+                  sx={{
+                    width: {xs: '50%', md: '80%'}
+                  }}
+                />
               </Box>}
               {testOutcome.patternTwo && <Box sx={{
                 position: 'absolute',
-                display: {xs: 'none', md: 'block'},
-                left: '9%',
-                top: '25%'
+                display: 'block',
+                left: {xs: '5%', md: '9%'},
+                top: {xs: '15%', md: '25%'}
               }}
               >
-                <img style={{width: '80%'}} src={testOutcome.patternTwo} alt="star2-pattern" />
+                <Box
+                  component="img"
+                  src={testOutcome.patternTwo}
+                  alt="star2-pattern"
+                  sx={{
+                    width: {xs: '50%', md: '80%'}
+                  }}
+                />
               </Box>}
+    
               {testOutcome.confettiPattern && <Box sx={{
                 position: 'absolute',
-                display: {xs: 'none', md: 'block'},
-                bottom: 0,
+                bottom: {xs: -50, md: 0},
                 left: 0,
-                alignSelf: 'center',
-                width: '100%'
+                width: {xs: '200%', md: '100%'},
+                display: 'flex',
+                justifyContent: 'center',
+                height: {xs: 180, sm: 160, md: 220},
+                backgroundImage: `url(${testOutcome.confettiPattern})`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center bottom',
+                backgroundSize: 'cover',
+                // opacity: {xs: 0.85, md: 1},
+                pointerEvents: 'none'
               }}
               >
-                <img style={{width: '100%', height: 'auto'}} src={testOutcome.confettiPattern} alt="confetti-pattern" />
               </Box>}
               <Box sx={{
                 display: 'flex',
@@ -78,31 +104,35 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome}){
                 <Box sx={{mb: '1rem'}}>
                   <img style={{width: '90%'}} src={testOutcome.displayIcon} alt='Test Outcome Icon'/>
                 </Box>
-              <Typography
-                // variant="h4"
-                component="div"
-                sx={{
-                  color: 'hsl(0, 0%, 100%)',
-                  fontWeight: '600',
-                  fontSize: {xs: '1.4rem', sm: '1.8rem', md: '2.2rem'}
-                }}
-              >
-                {testOutcome.title}
-              </Typography>
-              <Typography
-                // variant="subtitle1"
-                component="div"
-                sx={{
-                  color: 'hsl(240, 1%, 59%)',
-                  p: '0.5rem 0'
-                }}
-              >
-                {testOutcome.feedback}
-              </Typography>
+                <Typography
+                  component="div"
+                  sx={{
+                    color: 'hsl(0, 0%, 100%)',
+                    fontWeight: '600',
+                    fontSize: {xs: '1.4rem', sm: '1.8rem', md: '2.2rem'}
+                  }}
+                >
+                  {testOutcome.title}
+                </Typography>
+                <Typography
+                  // variant="subtitle1"
+                  component="div"
+                  sx={{
+                    color: 'hsl(240, 1%, 59%)',
+                    p: '0.5rem 0',
+                    textAlign: 'center'
+                  }}
+                >
+                  {testOutcome.feedback}
+                </Typography>
               <Box sx={{
                 display: 'grid',
                 gridTemplateColumns: {xs: '1fr', sm: 'repeat(3, 1fr)'},
-                mt: 1
+                gap:{xs: 1.5, sm: 2},
+                mt: 1, 
+                width: {xs: '100%', md: 'auto'},
+                maxWidth: '100%',
+                boxSizing: 'border-box'
                 }}
               >
                 {results.map(({label, value}) => (
@@ -113,10 +143,10 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome}){
                       minHeight: '4rem',
                       borderRadius: 2,
                       border: '1px solid hsl(240, 1%, 20%)',
-                      margin: '1rem 0.5rem 0',
                       padding: '0.7rem 1rem',
                       color: 'hsl(240, 1%, 59%)',
-                      fontSize: 16
+                      fontSize: 16,
+                      boxSizing: 'border-box'
                     }}
                   >
                     {label}
@@ -137,7 +167,8 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome}){
                   }}
                 >
                 <Button size='small' onClick={restart} >
-                  {testOutcome.actionText} <img style={{filter: 'invert(1)'}} src={RestartIcon} alt='Restart'/>
+                  {testOutcome.actionText} 
+                  <img style={{filter: 'invert(1)'}} src={RestartIcon} alt='Restart'/>
                 </Button>
               </Box>
               </Box>

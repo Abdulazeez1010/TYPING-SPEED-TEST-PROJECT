@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState, useRef } from 'react';
+import { Fragment, useEffect, useState, useRef, useCallback } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
@@ -68,7 +68,7 @@ const testOutcomeMessages = {
 
 function TypingTest() {
   const theme = useTheme();
-  const isXs = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const inputRef = useRef(null);
 
@@ -86,21 +86,31 @@ function TypingTest() {
   const [personalBest, setPersonalBest] = useState(saved);
   const [testOutcome, setTestOutcome] = useState({});
   const [hasStarted, setHasStarted] = useState(false);
+  const [totalKeyStrokes, setTotalKeyStrokes] = useState(0);
+  const [totalErrors, setTotalErrors] = useState(0);
+  const [correctIndex, setCorrectIndex] = useState(0);
+  const [errorPosition, setErrorPosition] = useState(new Set());
 
   const wrongLetters = typed
     .split("")
-    .filter((char, i) => char !== text[i]).length;  
+    .filter((char, i) => char !== text[i]).length;
 
-  const accuracy = typed.length === 0
-    ? 100
-    : Math.round(((typed.length - wrongLetters)/typed.length) * 100)
+  const correctChars = 
+    Math.max(typed.length - errorPosition.size, 0);
   
-  const minutesElapsed = mode === 'timed'
-    ? (TEST_DURATION - timeLeft) / 60 
-    : timeSpent / 60;
+  const accuracy = totalKeyStrokes === 0
+  ? 100
+  : Math.round(((totalKeyStrokes - totalErrors) / totalKeyStrokes) * 100)
+
+  const minutesElapsed = Math.max(
+    mode === 'timed'
+      ? (TEST_DURATION - timeLeft) / 60 
+      : timeSpent / 60,
+    1 / 60
+  );
 
   const wpm = minutesElapsed > 0
-    ? Math.round((typed.length / 5) / (minutesElapsed))
+    ? Math.round((correctChars / 5) / (minutesElapsed))
     : 0;
 
   const stats = {
@@ -108,6 +118,7 @@ function TypingTest() {
     accuracy,
     time: mode === 'passage' ? timeSpent : timeLeft
   };
+  console.log(totalKeyStrokes, totalErrors, correctChars, errorPosition.size, typed.length)
 
   const results = [
     {label: 'WPM', value: stats.wpm},
@@ -138,27 +149,55 @@ function TypingTest() {
     setIsRunning(false);
   }, [difficulty, testId, mode]);
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if(!hasStarted){
-        setHasStarted(true);
-        return;
-      }
-      if (testEnd) return;
-      if (event.key === ' ' && isRunning) event.preventDefault();
-      if (mode === 'timed' && timeLeft === 0) return;
-      if (!isRunning && typed.length > 0) return;
+  const processChar = useCallback((char) => {
+    setTyped(prev => {
+      const index = prev.length;
+      const expectedChar = text[index];
 
-      if (event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
-        setTyped((prev) => prev + event.key);
-      } else if (event.key === "Backspace") {
-        setTyped((prev) => prev.slice(0, -1));
+      setTotalKeyStrokes(k => k + 1);
+
+      if (char !== expectedChar){
+        setTotalErrors(e => e+ 1);
+        setErrorPosition(pos => {
+          const copy = new Set(pos);
+          copy.add(index);
+          return copy;
+        });
       }
-    };
-    
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+
+      return prev + char;
+    });
+  }, [text]);
+
+  const handleKeyDown = useCallback((event) => {
+    if(!hasStarted){
+      setHasStarted(true);
+      return;
+    }
+    if (testEnd) return;
+    if (event.key === ' ' && isRunning) event.preventDefault();
+    if (mode === 'timed' && timeLeft === 0) return;
+    if (!isRunning && typed.length > 0) return;
+
+    if (event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
+      console.log('keydown', event.key);
+
+      processChar(event.key);
+
+    } else if (event.key === "Backspace") {
+      setTyped((prev) => prev.slice(0, -1));
+    }
   }, [timeLeft, mode, testEnd, isRunning, hasStarted]);
+
+
+  useEffect(() => {
+    if (isMobile) return;
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isMobile, handleKeyDown]);
 
   useEffect(() => {
     if (typed.length === 1 && !isRunning) {
@@ -227,6 +266,13 @@ function TypingTest() {
     setHasStarted(false);
     setTestEnd(false);
     setTestId(prev => prev + 1);
+
+    setTotalKeyStrokes(0);
+    setTotalErrors(0);
+    setCorrectIndex(0);
+    setErrorPosition(new Set());
+    // setTyped('');
+    
     if(inputRef.current){
       inputRef.current.value = '';
     }
@@ -267,8 +313,14 @@ function TypingTest() {
               width: 0
             }}
             onChange={(e) => {
+              if (!isMobile) return;
               const value = e.target.value;
-              setTyped(prev => prev + value.slice(prev.length));
+              const newChars = value.slice(typed.length);
+
+              for (const char of newChars){
+                processChar(char);
+              }
+              // setTyped(prev => prev + value.slice(prev.length));
             }}
           />
           <Box sx={{
