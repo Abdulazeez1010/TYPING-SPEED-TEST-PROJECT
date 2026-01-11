@@ -13,6 +13,7 @@ import ConfettiPattern from './assets/images/pattern-confetti.svg';
 import CompletedIcon from './assets/images/icon-completed.svg';
 import NewPersonalBestIcon from './assets/images/icon-new-pb.svg';
 
+import { normalizeChar } from './utils/normalizeChar';
 import TypingText from "./TypingText";
 import TypingAppBar from "./TypingAppBar";
 import TypingMenuBar from './TypingMenuBar';
@@ -36,7 +37,7 @@ const difficultyOptions = [
 ];
 
 const modeOptions = [
-  {label: 'Timed (60)', value: 'timed'},
+  {label: 'Timed (60s)', value: 'timed'},
   {label: 'Passage', value: 'passage'}
 ];
 
@@ -91,16 +92,16 @@ function TypingTest() {
   const [correctIndex, setCorrectIndex] = useState(0);
   const [errorPosition, setErrorPosition] = useState(new Set());
 
-  const wrongLetters = typed
-    .split("")
-    .filter((char, i) => char !== text[i]).length;
+  // const wrongLetters = typed
+  //   .split("")
+  //   .filter((char, i) => char !== text[i]).length;
 
   const correctChars = 
     Math.max(typed.length - errorPosition.size, 0);
   
   const accuracy = totalKeyStrokes === 0
-  ? 100
-  : Math.round(((totalKeyStrokes - totalErrors) / totalKeyStrokes) * 100)
+    ? 100
+    : Math.round(((totalKeyStrokes - totalErrors) / totalKeyStrokes) * 100)
 
   const minutesElapsed = Math.max(
     mode === 'timed'
@@ -113,17 +114,27 @@ function TypingTest() {
     ? Math.round((correctChars / 5) / (minutesElapsed))
     : 0;
 
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   const stats = {
     wpm,
     accuracy,
-    time: mode === 'passage' ? timeSpent : timeLeft
+    time: mode === 'passage'
+      ? formatTime(timeSpent)
+      : `0:${timeLeft.toString().padStart(2, '0')}`
   };
-  console.log(totalKeyStrokes, totalErrors, correctChars, errorPosition.size, typed.length)
+  // console.log(totalKeyStrokes, totalErrors, correctChars, errorPosition.size, typed.length)
 
   const results = [
     {label: 'WPM', value: stats.wpm},
     {label: 'Accuracy', value: `${stats.accuracy}%`},
-    {label: 'Characters', value: `${typed.length - wrongLetters}/${wrongLetters}`}
+    // {label: 'Characters', value: `${typed.length - wrongLetters}/${wrongLetters}`}
+    {label: 'Characters', value: `${typed.length - errorPosition.size}/${errorPosition.size}`}
   ]
 
   useEffect(() =>{
@@ -150,22 +161,22 @@ function TypingTest() {
   }, [difficulty, testId, mode]);
 
   const processChar = useCallback((char) => {
+    const normalizedChar = normalizeChar(char);
     setTyped(prev => {
       const index = prev.length;
-      const expectedChar = text[index];
+      const expectedChar = normalizeChar(text[index]);
 
       setTotalKeyStrokes(k => k + 1);
 
-      if (char !== expectedChar){
-        setTotalErrors(e => e+ 1);
+      if (normalizedChar !== expectedChar){
+        setTotalErrors(e => e + 1);
         setErrorPosition(pos => {
           const copy = new Set(pos);
           copy.add(index);
           return copy;
         });
       }
-
-      return prev + char;
+      return prev + normalizedChar;
     });
   }, [text]);
 
@@ -180,7 +191,7 @@ function TypingTest() {
     if (!isRunning && typed.length > 0) return;
 
     if (event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
-      console.log('keydown', event.key);
+      // console.log('keydown', event.key);
 
       processChar(event.key);
 

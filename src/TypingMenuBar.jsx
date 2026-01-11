@@ -75,12 +75,19 @@ function TypingMenuBar({
                     >
                       <Typography 
                         key={id}
-                        sx={{color: 'hsl(240, 1%, 59%)'}}
+                        sx={{color: 'hsl(240, 1%, 59%)', fontSize: '0.8rem'}}
                       >
                         {label}:
                       </Typography>
                       <Typography 
-                        sx={{color: color, fontWeight: '700', fontSize: {xs: '1.5rem', sm: '1rem'}}}
+                        sx={{
+                          color: color,
+                          fontWeight: '700',
+                          fontSize: {xs: '1.5rem', sm: '1rem'},
+                          minWidth: (id === 'time' || id === 'accuracy') ? '4ch' : '2ch',
+                          // fontVariantNumeric: 'tabular-nums',
+                          textAlign: 'right'
+                        }}
                       >
                         {stats[id]}{unit}
                       </Typography>
@@ -91,9 +98,9 @@ function TypingMenuBar({
                         flexItem
                         sx={{
                           borderColor: 'hsl(240, 1%, 59%)',
-                          opacity: 0.6, 
-                          pr: {xs: 2.5, sm: 5, md: 2},
-                          mr: {md: 1},
+                          opacity: 0.3, 
+                          pr: {xs: 2.5, sm: 5, md: 1, lg: 2},
+                          // mr: {md: 1},
                         }}
                       />
                       }
@@ -109,7 +116,7 @@ function TypingMenuBar({
                 justifyContent: {xs: 'center', md: 'flex-end'},
                 alignItems: 'center',
                 width: {xs: "100%", md: 'auto'},
-                gap: {lg: 1.5},
+                gap: {md: 1.0, lg: 1.5},
                 flexShrink: 0
               }}
             >
@@ -124,10 +131,10 @@ function TypingMenuBar({
                 orientation="vertical"
                 sx={{
                   borderColor: 'hsl(240, 1%, 59%)',
-                  opacity: 0.6,
-                  pr: { md: 1},
-                  my: {md: 1, lg: 0},
-                  mr: 1
+                  opacity: 0.3,
+                  // pr: { md: 1},
+                  // my: {md: 1, lg: 0},
+                  // mr: 1
                 }}
               />}
               <ResponsiveSelector

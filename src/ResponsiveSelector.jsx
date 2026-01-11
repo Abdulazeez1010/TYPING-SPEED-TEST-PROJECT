@@ -48,8 +48,8 @@ function ResponsiveSelector({label, value, options, onChange}){
     return (
         <>
         {/* Desktop */}
-        <Box sx={{display: { xs: 'none', lg: 'flex'}, alignItems: 'center', gap: 2}}>
-          <Typography sx={{ color: 'hsl(240, 1%, 59%)'}}>
+        <Box sx={{display: { xs: 'none', md: 'flex'}, alignItems: 'center', gap: 1}}>
+          <Typography sx={{ color: 'hsl(240, 1%, 59%)', fontSize: '0.7rem'}}>
             {label}:
           </Typography>
           <Stack id="button" spacing={0.5} direction="row">
@@ -59,6 +59,13 @@ function ResponsiveSelector({label, value, options, onChange}){
                 onClick={() => onChange(opt.value)}
                 variant="outlined"
                 size='small'
+                sx={{
+                  fontSize: '0.7rem',
+                  minWidth: 'unset',
+                  px: 0.75,
+                  py: 0.1,
+                  whiteSpace: 'nowrap',
+                }}
             >
                 {opt.label}
             </Button>
@@ -67,7 +74,7 @@ function ResponsiveSelector({label, value, options, onChange}){
           </Box>
 
           {/* Mobile */}
-          <Box sx={{display: { xs: 'flex', lg: 'none'}, alignItems: 'center', gap: 2, width: '100%'}}>
+          <Box sx={{display: { xs: 'flex', md: 'none'}, alignItems: 'center', gap: 2, width: '100%'}}>
             <FormControl variant="standard" sx={{ m: 1, width: '100%'}}>
               <Select
                 value={value}
