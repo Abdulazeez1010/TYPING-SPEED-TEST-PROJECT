@@ -26,7 +26,7 @@ const TEST_DURATION = 60;
 
 const statConfig = [
     { id: 'wpm', label : 'WPM',  color: 'hsl(0, 0%, 100%)', unit: ''},
-    { id: 'accuracy', label :'Accuracy',  color: 'hsl(354, 63%, 57%)', unit: '%'},
+    { id: 'accuracy', label :'Accuracy',  color:  'hsl(354, 63%, 57%)', unit: '%'},
     { id: 'time', label : 'Time', color: 'hsl(49, 85%, 70%)', unit: ''}
 ];
 
@@ -131,10 +131,13 @@ function TypingTest() {
   // console.log(totalKeyStrokes, totalErrors, correctChars, errorPosition.size, typed.length)
 
   const results = [
-    {label: 'WPM', value: stats.wpm},
-    {label: 'Accuracy', value: `${stats.accuracy}%`},
-    // {label: 'Characters', value: `${typed.length - wrongLetters}/${wrongLetters}`}
-    {label: 'Characters', value: `${typed.length - errorPosition.size}/${errorPosition.size}`}
+    {label: 'WPM:', value: stats.wpm},
+    {label: 'Accuracy:', value: `${stats.accuracy}`},
+    {
+      label: 'Characters',
+      correct: typed.length - errorPosition.size,
+      errors: errorPosition.size
+    }
   ]
 
   useEffect(() =>{
@@ -356,6 +359,7 @@ function TypingTest() {
               modeOptions={modeOptions}
               mode={mode}
               difficulty={difficulty}
+              hasStarted={hasStarted}
             />
             <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3,}}/>
           

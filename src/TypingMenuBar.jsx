@@ -16,7 +16,8 @@ function TypingMenuBar({
   difficultyOptions,
   modeOptions,
   mode,
-  difficulty
+  difficulty,
+  hasStarted
 }){
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -81,7 +82,14 @@ function TypingMenuBar({
                       </Typography>
                       <Typography 
                         sx={{
-                          color: color,
+                          color:
+                            !hasStarted 
+                            ? 'hsl(0, 0%, 100%)' 
+                            : label === 'Accuracy'
+                              ? stats[id] >= 95
+                                ? 'hsl(140, 63%, 57%)'
+                                : 'hsl(354, 63%, 57%)'
+                            : color,
                           fontWeight: '700',
                           fontSize: {xs: '1.5rem', sm: '1rem'},
                           minWidth: (id === 'time' || id === 'accuracy') ? '4ch' : '2ch',
