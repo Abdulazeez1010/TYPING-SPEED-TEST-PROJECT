@@ -371,6 +371,10 @@ function TypingTest() {
                 transition: 'filter 0.3s ease',
                 overflow: 'hidden'
               }}
+              onClick = {() => {
+                if (!isMobile) return;
+                inputRef.current?.focus();
+              }}
             >
               <TypingText
                 text={text}
