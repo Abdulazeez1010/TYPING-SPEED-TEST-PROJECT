@@ -3,7 +3,7 @@ import './TypingText.css';
 
 import { normalizeChar } from './utils/normalizeChar';
 import { Box } from '@mui/material';
-import { useRef, useLayoutEffect, useState } from 'react';
+import { useRef, useLayoutEffect, useState, useEffect } from 'react';
 
 function TypingText({text, typed, isRunning, hasStarted }) {
   const words = text.split(/(\s+)/);
@@ -14,6 +14,15 @@ function TypingText({text, typed, isRunning, hasStarted }) {
 
   const [cursorPos, setCursorPos] = useState({x: 0, y: 0});
   const [cursorWidth, setCursorWidth] = useState(0);
+  const [cursorTick, setCursorTick] = useState(0);
+
+  const getKeyboardOffset = () => {
+    if (!window.visualViewport) return 0;
+
+    const keyboardHeight = window.innerHeight - window.visualViewport.height;
+
+    return Math.max(keyboardHeight, 0);
+  }
 
   useLayoutEffect(() => {
     if (!isRunning) return;
@@ -21,55 +30,38 @@ function TypingText({text, typed, isRunning, hasStarted }) {
 
     const container = containerRef.current;
     const charRect = activeCharRef.current.getBoundingClientRect();
-    // const containerRect = cursorRef.current.offsetParent.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
     const charTop = charRect.top - containerRect.top + container.scrollTop;
     const charBottom = charTop + charRect.height;
 
+    const keyboardOffset = getKeyboardOffset();
+
     const viewTop = container.scrollTop;
-    const viewBottom = viewTop + container.clientHeight;
+    const viewBottom = viewTop + container.clientHeight - keyboardOffset;
 
     const padding = 40;
 
     if (charBottom > viewBottom - padding) {
-      container.scrollTop = charBottom - container.clientHeight + padding;
+      container.scrollTop =
+        charBottom - (container.clientHeight - keyboardOffset) + padding;
     } else if (charTop < viewTop + padding) {
       container.scrollTop = charTop - padding;
     }
+  }, [typed.length, isRunning, text, cursorTick]);
 
-    // setCursorWidth(charRect.width);
+  useEffect(() => {
+    if (!window.visualViewport) return;
 
-    // setCursorPos({
-    //   x: charRect.left - containerRect.left,
-    //   // y: charRect.top - containerRect.top
-    //   y: charRect.bottom - containerRect.top - charRect.height
-    // });
+    const handleResize = () => {
+      setCursorTick(t => t + 1);
+    };
 
-    // if (containerRef.current) {
-    //   // const charTop = 
-    //   //   charRect.top -
-    //   //   containerRect.top + 
-    //   //   container.scrollTop;
-    //   // const charTop = 
-    //   //   activeCharRef.current.getBoundingClientRect().top -
-    //   //   containerRef.current.getBoundingClientRect().top + 
-    //   //   containerRef.current.scrollTop;
-    //   // const charBottom = charTop + activeCharRef.current.offsetHeight;
-    //   // const charBottom = charTop + charRect.height;
+    window.visualViewport.addEventListener('resize', handleResize);
 
-    //   // const viewTop = container.scrollTop;
-    //   // const viewBottom = viewTop + container.clientHeight;
-    //   // const padding = 40;
-      
-    //   if (charBottom > viewBottom - padding) {
-    //     container.scrollTop = charBottom - container.clientHeight + padding;
-    //   } else if (charTop < viewTop + padding) {
-    //     container.scrollTop = charTop - padding;
-    //   }
-    // }
-
-
-  }, [typed.length, isRunning, text]);
+    return () => {
+      window.visualViewport.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useLayoutEffect(() => {
     if (!isRunning) return;
@@ -84,10 +76,11 @@ function TypingText({text, typed, isRunning, hasStarted }) {
 
       setCursorPos({
         x: charRect.left - containerRect.left,
-        y: charRect.bottom - containerRect.top - charRect.height
+        // y: charRect.bottom - containerRect.top - charRect.height
+        y: charRect.top - containerRect.top
       });
     });
-  }, [typed.length, isRunning]);
+  }, [typed.length, isRunning, cursorTick]);
 
   return (
     <>
