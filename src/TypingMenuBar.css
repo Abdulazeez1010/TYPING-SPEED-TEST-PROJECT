@@ -1,4 +1,12 @@
-#button Button{
+/* #button Button{
+    border-radius: 7px;
+    text-transform: none;
+    color: white;
+    font-weight: 100;
+    border-color: rgba(255,255,255, 0.5);
+} */
+
+#button .MuiButton-outlined{
     border-radius: 7px;
     text-transform: none;
     color: white;
@@ -6,15 +14,19 @@
     border-color: rgba(255,255,255, 0.5);
 }
 
-#button Button:hover{
-    color: hsl(210, 100%, 65%);;
-    border-color: hsl(210, 100%, 65%);
-}
 
-#button Button:active{
+#button .MuiButton-outlined:hover{
     color: hsl(210, 100%, 65%);
+    border-color: currentColor;
+    background-color: transparent;
 }
 
-div.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation8.MuiPopover-paper.MuiMenu-paper.css-1tktgsa-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
- background-color: hsl(0, 0%, 15%);
+#button .MuiButton-outlined.active{
+    color: hsl(210, 100%, 65%);
+    border-color: hsl(210, 100%, 65%);
+    background-color: transparent;
 }
+
+/* .MuiMenu-paper{
+    background-color: hsl(0, 0%, 15%);
+} */

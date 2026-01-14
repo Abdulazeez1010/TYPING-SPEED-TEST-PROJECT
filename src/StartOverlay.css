@@ -7,3 +7,7 @@
     font-size: medium;
     margin: 1rem;
 }
+
+#StartOverlay-button:hover {
+    background-color: hsl(210, 100%, 65%);
+}

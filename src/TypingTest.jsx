@@ -270,10 +270,14 @@ function TypingTest() {
   const handleDifficulty = (lvl) => {
     setDifficulty(lvl);
     setMode('timed');
+
+    restart();
   }
 
   const handleMode = (mode) => {
-    setMode(mode)
+    setMode(mode);
+
+    restart();
   }
 
   const restart = () => {
@@ -372,7 +376,10 @@ function TypingTest() {
                 overflow: 'hidden'
               }}
               onClick = {() => {
-                if (!isMobile) return;
+                if (!isMobile) {
+                  handleHasStarted();
+                  return
+                };
                 inputRef.current?.focus();
               }}
             >
@@ -398,9 +405,15 @@ function TypingTest() {
                 py: '1rem'
                 }}
               >
-              {hasStarted && <Button onClick={restart} >
-                Restart Test <img src={RestartIcon} alt='Typing Test Logo'/>
-              </Button>}
+              {hasStarted && ( 
+                <Button
+                  onClick={restart}
+                  disableRipple
+                  disableFocusRipple
+                  disableTouchRipple
+                >
+                  Restart Test <img src={RestartIcon} alt='restart icon'/>
+                </Button>)}
             </Box>
           </Box>
         </Container>

@@ -21,16 +21,25 @@ function StartOverlay({handleHasStarted}){
             maxWidth: {xs: '100%', sm: '488px', md: '660px', lg: '960px', xl: '1200px'},
             width: '100%',
             justifySelf: 'center',
-            textAlign: 'center'
+            textAlign: 'center',
+            pointerEvents: 'none'
           }}
           onClick={() => handleHasStarted()}
         >
-            <Button id='StartOverlay-button' onClick={() => handleHasStarted()}>
+            <Box sx={{pointerEvents: 'auto'}}>
+            <Button
+              id='StartOverlay-button'
+              onClick={() => handleHasStarted()}
+            >
                 Start Typing Test
             </Button>
-            <Typography color='white' >
+            <Typography
+              color='white'
+            //   sx={{pointerEvents: 'none'}}
+            >
                 Or click the text and start typing
             </Typography>
+            </Box>
         </Box>
     )
 }

@@ -94,7 +94,8 @@ function TypingText({text, typed, isRunning, hasStarted }) {
         maxWidth: '100%',
         boxSizing: 'border-box',
         height: '100%',
-        pt: 1
+        pt: 1,
+        pointerEvents: hasStarted ? 'auto' : 'none'
       }}
     >
       {isRunning && (

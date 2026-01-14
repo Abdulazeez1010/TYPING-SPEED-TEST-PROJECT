@@ -52,12 +52,16 @@ function ResponsiveSelector({label, value, options, onChange}){
           <Typography sx={{ color: 'hsl(240, 1%, 59%)', fontSize: '0.7rem'}}>
             {label}:
           </Typography>
-          <Stack id="button" spacing={0.5} direction="row">
+          <Stack id='button' spacing={0.5} direction="row">
             {options.map((opt) => (
             <Button
                 key={opt.value}
                 onClick={() => onChange(opt.value)}
+                className={value === opt.value ? 'active' : ''}
                 variant="outlined"
+                disableRipple
+                disableFocusRipple
+                disableTouchRipple
                 size='small'
                 sx={{
                   fontSize: '0.7rem',
