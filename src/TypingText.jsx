@@ -15,14 +15,31 @@ function TypingText({text, typed, isRunning, hasStarted }) {
   const [cursorPos, setCursorPos] = useState({x: 0, y: 0});
   const [cursorWidth, setCursorWidth] = useState(0);
   const [cursorTick, setCursorTick] = useState(0);
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
 
-  const getKeyboardOffset = () => {
-    if (!window.visualViewport) return 0;
+  // const getKeyboardOffset = () => {
+  //   if (!window.visualViewport) return 0;
 
-    const keyboardHeight = window.innerHeight - window.visualViewport.height;
+  //   const keyboardHeight = window.innerHeight - window.visualViewport.height;
 
-    return Math.max(keyboardHeight, 0);
-  }
+  //   return Math.max(keyboardHeight, 0);
+  // }
+
+  useEffect(() => {
+    if (!window.visualViewport) return;
+
+    const updateKeyboard = () => {
+      const height = window.innerHeight - window.visualViewport.height;
+      setKeyboardOffset(Math.max(height, 0));
+    };
+
+    window.visualViewport.addEventListener('resize', updateKeyboard);
+    updateKeyboard();
+
+    return () => {
+      window.visualViewport.removeEventListener('resize', updateKeyboard);
+    };
+  }, []);
 
   useLayoutEffect(() => {
     if (!isRunning) return;
@@ -35,42 +52,39 @@ function TypingText({text, typed, isRunning, hasStarted }) {
     const charBottom = charTop + charRect.height;
 
     // const keyboardOffset = getKeyboardOffset();
-    const keyboardOffset = getKeyboardOffset?.() ?? 0;
+    // const keyboardOffset = getKeyboardOffset?.() ?? 0;
 
-    const viewHeight = container.clientHeight - keyboardOffset;
+    // const viewHeight = container.clientHeight - keyboardOffset;
     const viewTop = container.scrollTop;
-    const viewBottom = viewTop + viewHeight;
+    const viewBottom = viewTop + container.clientHeight;
 
-    const lineHeight = activeCharRef.current.offsetHeight;
+    const lineHeight = charRect.height;
     const bufferAbove = lineHeight * 1.2;
     // const bufferBelow = lineHeight * 0.8;
     const padding = 24;
 
-    const maxscrollTop = container.scrollHeight - container.clientHeight;
+    // const maxscrollTop = container.scrollHeight - container.clientHeight;
 
     let nextScrollTop = null; 
 
     if (charBottom > viewBottom - padding) {
       nextScrollTop =
-        // charBottom - viewHeight + padding;
-        charBottom - viewHeight + bufferAbove;
-      if (nextScrollTop > maxscrollTop) {
-        nextScrollTop = maxscrollTop;
-      }
+        charBottom - container.clientHeight + bufferAbove;
     } else if (charTop < viewTop + bufferAbove) {
       nextScrollTop = charTop - bufferAbove;
     }
     if (nextScrollTop !==null) {
+      const maxScrollTop = container.scrollHeight - container.clientHeight;
       container.scrollTop = Math.max(
         0,
-        Math.min(nextScrollTop, maxscrollTop)
-      )
+        Math.min(nextScrollTop, maxScrollTop)
+      );
     }
-    container.scrollTo({
-      top: nextScrollTop,
-      behavior: 'smooth'
-    });
-  }, [typed.length, isRunning, text]);
+    // container.scrollTo({
+    //   top: nextScrollTop,
+    //   behavior: 'smooth'
+    // });
+  }, [typed.length, isRunning, text, keyboardOffset]);
   // }, [typed.length, isRunning, text, cursorTick]);
 
   useEffect(() => {
@@ -90,7 +104,8 @@ function TypingText({text, typed, isRunning, hasStarted }) {
   useLayoutEffect(() => {
     if (!isRunning) return;
     requestAnimationFrame(() => {
-      if (!activeCharRef.current || !cursorRef.current || !containerRef.current)
+      // if (!activeCharRef.current || !cursorRef.current || !containerRef.current)
+      if (!activeCharRef.current || !containerRef.current)
         return;
 
       const charRect = activeCharRef.current.getBoundingClientRect();
@@ -100,11 +115,11 @@ function TypingText({text, typed, isRunning, hasStarted }) {
 
       setCursorPos({
         x: charRect.left - containerRect.left,
-        // y: charRect.bottom - containerRect.top - charRect.height
         y: charRect.top - containerRect.top
       });
     });
-  }, [typed.length, isRunning, cursorTick]);
+  }, [typed.length, isRunning, keyboardOffset]);
+  // }, [typed.length, isRunning, cursorTick]);
 
   return (
     <>
@@ -112,13 +127,13 @@ function TypingText({text, typed, isRunning, hasStarted }) {
       ref={containerRef}
       className='Typing-text-container'
       sx={{
-        // overflowY: {xs: 'auto', md: 'auto'},
         overflowY:'auto',
         width: '100%',
         maxWidth: '100%',
         boxSizing: 'border-box',
         height: '100%',
         pt: 1,
+        paddingBottom: `${keyboardOffset + 80}px`,
         pointerEvents: hasStarted ? 'auto' : 'none'
       }}
     >
@@ -153,7 +168,6 @@ function TypingText({text, typed, isRunning, hasStarted }) {
                 key={charIndex}
                 className='char-wrapper'
               >
-                {/* {isActive && <span  className='cursor'/>} */}
                 <Typography
                   ref={isActive ? activeCharRef : null}
                   className={classes}
