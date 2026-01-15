@@ -17,14 +17,6 @@ function TypingText({text, typed, isRunning, hasStarted }) {
   const [cursorTick, setCursorTick] = useState(0);
   const [keyboardOffset, setKeyboardOffset] = useState(0);
 
-  // const getKeyboardOffset = () => {
-  //   if (!window.visualViewport) return 0;
-
-  //   const keyboardHeight = window.innerHeight - window.visualViewport.height;
-
-  //   return Math.max(keyboardHeight, 0);
-  // }
-
   useEffect(() => {
     if (!window.visualViewport) return;
 
@@ -51,19 +43,12 @@ function TypingText({text, typed, isRunning, hasStarted }) {
     const charTop = charRect.top - containerRect.top + container.scrollTop;
     const charBottom = charTop + charRect.height;
 
-    // const keyboardOffset = getKeyboardOffset();
-    // const keyboardOffset = getKeyboardOffset?.() ?? 0;
-
-    // const viewHeight = container.clientHeight - keyboardOffset;
     const viewTop = container.scrollTop;
     const viewBottom = viewTop + container.clientHeight;
 
     const lineHeight = charRect.height;
     const bufferAbove = lineHeight * 1.2;
-    // const bufferBelow = lineHeight * 0.8;
     const padding = 24;
-
-    // const maxscrollTop = container.scrollHeight - container.clientHeight;
 
     let nextScrollTop = null; 
 
@@ -80,11 +65,7 @@ function TypingText({text, typed, isRunning, hasStarted }) {
         Math.min(nextScrollTop, maxScrollTop)
       );
     }
-    // container.scrollTo({
-    //   top: nextScrollTop,
-    //   behavior: 'smooth'
-    // });
-  }, [typed.length, isRunning, text, keyboardOffset]);
+  }, [typed.length, isRunning, text, keyboardOffset, cursorTick]);
   // }, [typed.length, isRunning, text, cursorTick]);
 
   useEffect(() => {
@@ -118,7 +99,7 @@ function TypingText({text, typed, isRunning, hasStarted }) {
         y: charRect.top - containerRect.top
       });
     });
-  }, [typed.length, isRunning, keyboardOffset]);
+  }, [typed.length, isRunning, , cursorTick]);
   // }, [typed.length, isRunning, cursorTick]);
 
   return (

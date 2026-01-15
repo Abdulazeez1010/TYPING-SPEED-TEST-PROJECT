@@ -92,10 +92,6 @@ function TypingTest() {
   const [correctIndex, setCorrectIndex] = useState(0);
   const [errorPosition, setErrorPosition] = useState(new Set());
 
-  // const wrongLetters = typed
-  //   .split("")
-  //   .filter((char, i) => char !== text[i]).length;
-
   const correctChars = 
     Math.max(typed.length - errorPosition.size, 0);
   
@@ -194,7 +190,6 @@ function TypingTest() {
     if (!isRunning && typed.length > 0) return;
 
     if (event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
-      // console.log('keydown', event.key);
 
       processChar(event.key);
 
@@ -292,7 +287,8 @@ function TypingTest() {
     setTotalErrors(0);
     setCorrectIndex(0);
     setErrorPosition(new Set());
-    setTyped('');
+    // console.log('typed is:',typed);
+    // setTyped('');
     
     if(inputRef.current){
       inputRef.current.value = '';

@@ -11,7 +11,7 @@ import RestartIcon from './assets/images/icon-restart.svg';
 
 import './TestComplete.css';
 
-function TestComplete({ restart, results, personalBest, stats, testOutcome}){
+function TestComplete({ restart, results, personalBest, stats, testOutcome }){
 
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('sm'));
@@ -108,9 +108,13 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome}){
                 alignItems: "center"
               }}>
                 <Box sx={{mb: '1rem', display: 'flex', justifyContent: 'center'}}>
-                  <Box className='ripple-icon'>
+                  <Box
+                    className= {testOutcome.title === 'High Score Smashed!'
+                      ? ''
+                      : 'ripple-icon'
+                    }
+                  >
                     <img 
-                      // style={{width: '90%'}}
                       src={testOutcome.displayIcon}
                       alt='Test Outcome Icon'
                       className='ripple-icon_img'
@@ -204,7 +208,9 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome}){
                   justifyContent: 'center',
                   }}
                 >
-                <Button size='small' onClick={restart} >
+                <Button size='small'
+                  onClick={restart}
+                >
                   {testOutcome.actionText} 
                   <img style={{filter: 'invert(1)'}} src={RestartIcon} alt='Restart'/>
                 </Button>
