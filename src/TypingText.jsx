@@ -47,21 +47,30 @@ function TypingText({text, typed, isRunning, hasStarted }) {
     const charTop = charRect.top - containerRect.top + container.scrollTop;
     const charBottom = charTop + charRect.height;
 
-    const viewTop = container.scrollTop;
-    const viewBottom = viewTop + container.clientHeight - keyboardOffset;
+    const visibleTop = container.scrollTop;
+    const visibleBottom = visibleTop + container.clientHeight - keyboardOffset;
 
     const lineHeight = charRect.height;
-    const bufferAbove = lineHeight * 1.2;
-    const padding = 24;
 
-    let targetScroll = null; 
+    // const bufferAbove = lineHeight * 1.2;
+    // const padding = 24;
+    const upperBound = visibleTop + lineHeight;
+    const lowerBound = visibleBottom - lineHeight * 2;
 
-    if (charBottom > viewBottom - padding) {
-      targetScroll =
-        charBottom - (container.clientHeight - keyboardOffset) + bufferAbove;
-    } else if (charTop < viewTop + bufferAbove) {
-      targetScroll = charTop - bufferAbove;
+    let targetScroll = null;
+
+    if (charTop < upperBound){
+      targetScroll = charTop - lineHeight;
+    } else if (charBottom > lowerBound){
+      targetScroll = charBottom - (container.clientHeight - keyboardOffset) + lineHeight;
     }
+
+    // if (charBottom > viewBottom - padding) {
+    //   targetScroll =
+    //     charBottom - (container.clientHeight - keyboardOffset) + bufferAbove;
+    // } else if (charTop < viewTop + bufferAbove) {
+    //   targetScroll = charTop - bufferAbove;
+    // }
     if (targetScroll !== null) {
       const maxScroll = container.scrollHeight - container.clientHeight;
       container.scrollTop = Math.max(
