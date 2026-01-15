@@ -276,6 +276,9 @@ function TypingTest() {
 
   const handleMode = (mode) => {
     setMode(mode);
+    if (mode === 'passage'){
+      setDifficulty('hard');
+    }
 
     restart();
   }
@@ -289,7 +292,7 @@ function TypingTest() {
     setTotalErrors(0);
     setCorrectIndex(0);
     setErrorPosition(new Set());
-    // setTyped('');
+    setTyped('');
     
     if(inputRef.current){
       inputRef.current.value = '';
@@ -380,6 +383,7 @@ function TypingTest() {
                   handleHasStarted();
                   return
                 };
+                handleHasStarted();
                 inputRef.current?.focus();
               }}
             >

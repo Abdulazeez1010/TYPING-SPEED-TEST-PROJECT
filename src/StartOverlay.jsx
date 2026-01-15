@@ -26,7 +26,7 @@ function StartOverlay({handleHasStarted}){
           }}
           onClick={() => handleHasStarted()}
         >
-            <Box sx={{pointerEvents: 'auto'}}>
+          <Box sx={{pointerEvents: 'auto'}}>
             <Button
               id='StartOverlay-button'
               onClick={() => handleHasStarted()}
@@ -35,11 +35,10 @@ function StartOverlay({handleHasStarted}){
             </Button>
             <Typography
               color='white'
-            //   sx={{pointerEvents: 'none'}}
             >
                 Or click the text and start typing
             </Typography>
-            </Box>
+          </Box>
         </Box>
     )
 }

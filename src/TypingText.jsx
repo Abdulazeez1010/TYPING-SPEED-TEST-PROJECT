@@ -34,20 +34,44 @@ function TypingText({text, typed, isRunning, hasStarted }) {
     const charTop = charRect.top - containerRect.top + container.scrollTop;
     const charBottom = charTop + charRect.height;
 
-    const keyboardOffset = getKeyboardOffset();
+    // const keyboardOffset = getKeyboardOffset();
+    const keyboardOffset = getKeyboardOffset?.() ?? 0;
 
+    const viewHeight = container.clientHeight - keyboardOffset;
     const viewTop = container.scrollTop;
-    const viewBottom = viewTop + container.clientHeight - keyboardOffset;
+    const viewBottom = viewTop + viewHeight;
 
-    const padding = 40;
+    const lineHeight = activeCharRef.current.offsetHeight;
+    const bufferAbove = lineHeight * 1.2;
+    // const bufferBelow = lineHeight * 0.8;
+    const padding = 24;
+
+    const maxscrollTop = container.scrollHeight - container.clientHeight;
+
+    let nextScrollTop = null; 
 
     if (charBottom > viewBottom - padding) {
-      container.scrollTop =
-        charBottom - (container.clientHeight - keyboardOffset) + padding;
-    } else if (charTop < viewTop + padding) {
-      container.scrollTop = charTop - padding;
+      nextScrollTop =
+        // charBottom - viewHeight + padding;
+        charBottom - viewHeight + bufferAbove;
+      if (nextScrollTop > maxscrollTop) {
+        nextScrollTop = maxscrollTop;
+      }
+    } else if (charTop < viewTop + bufferAbove) {
+      nextScrollTop = charTop - bufferAbove;
     }
-  }, [typed.length, isRunning, text, cursorTick]);
+    if (nextScrollTop !==null) {
+      container.scrollTop = Math.max(
+        0,
+        Math.min(nextScrollTop, maxscrollTop)
+      )
+    }
+    container.scrollTo({
+      top: nextScrollTop,
+      behavior: 'smooth'
+    });
+  }, [typed.length, isRunning, text]);
+  // }, [typed.length, isRunning, text, cursorTick]);
 
   useEffect(() => {
     if (!window.visualViewport) return;

@@ -107,8 +107,15 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome}){
                 flexDirection: 'column',
                 alignItems: "center"
               }}>
-                <Box sx={{mb: '1rem'}}>
-                  <img style={{width: '90%'}} src={testOutcome.displayIcon} alt='Test Outcome Icon'/>
+                <Box sx={{mb: '1rem', display: 'flex', justifyContent: 'center'}}>
+                  <Box className='ripple-icon'>
+                    <img 
+                      // style={{width: '90%'}}
+                      src={testOutcome.displayIcon}
+                      alt='Test Outcome Icon'
+                      className='ripple-icon_img'
+                    />
+                  </Box>
                 </Box>
                 <Typography
                   component="div"
