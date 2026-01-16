@@ -11,6 +11,7 @@ function TypingText({text, typed, isRunning, hasStarted }) {
   const cursorRef = useRef(null);
   const activeCharRef = useRef(null);
   const containerRef = useRef(null);
+  const lastLineRef = useRef(null);
 
   const [cursorPos, setCursorPos] = useState({x: 0, y: 0});
   const [cursorWidth, setCursorWidth] = useState(0);
@@ -38,31 +39,43 @@ function TypingText({text, typed, isRunning, hasStarted }) {
   // Scroll container to keep cursor in view
   useLayoutEffect(() => {
     if (!isRunning) return;
-    if (!activeCharRef.current || !cursorRef.current) return;
+    // if (!activeCharRef.current || !cursorRef.current) return;
+    if (!activeCharRef.current || !containerRef.current) return;
 
     const container = containerRef.current;
     const charRect = activeCharRef.current.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
 
     const charTop = charRect.top - containerRect.top + container.scrollTop;
-    const charBottom = charTop + charRect.height;
+    // const charBottom = charTop + charRect.height;
+
+    // const visibleTop = container.scrollTop;
+    // const visibleBottom = visibleTop + container.clientHeight - keyboardOffset;
+
+    const lineHeight = charRect.height;
+    const currentLine = Math.floor(charTop / lineHeight);
+
+    if (lastLineRef.current === currentLine) return;
+
+    lastLineRef.current = currentLine;
 
     const visibleTop = container.scrollTop;
     const visibleBottom = visibleTop + container.clientHeight - keyboardOffset;
 
-    const lineHeight = charRect.height;
+    const desiredTop = charTop - lineHeight;
+    const desiredBottom = charTop + lineHeight * 2;
 
     // const bufferAbove = lineHeight * 1.2;
     // const padding = 24;
-    const upperBound = visibleTop + lineHeight;
-    const lowerBound = visibleBottom - lineHeight * 2;
+    // const upperBound = visibleTop + lineHeight;
+    // const lowerBound = visibleBottom - lineHeight * 2;
 
     let targetScroll = null;
 
-    if (charTop < upperBound){
-      targetScroll = charTop - lineHeight;
-    } else if (charBottom > lowerBound){
-      targetScroll = charBottom - (container.clientHeight - keyboardOffset) + lineHeight;
+    if (desiredTop < visibleTop){
+      targetScroll = desiredTop;
+    } else if (desiredBottom > visibleBottom){
+      targetScroll = desiredBottom - (container.clientHeight - keyboardOffset);
     }
 
     // if (charBottom > viewBottom - padding) {
@@ -71,6 +84,7 @@ function TypingText({text, typed, isRunning, hasStarted }) {
     // } else if (charTop < viewTop + bufferAbove) {
     //   targetScroll = charTop - bufferAbove;
     // }
+    
     if (targetScroll !== null) {
       const maxScroll = container.scrollHeight - container.clientHeight;
       container.scrollTop = Math.max(
@@ -78,9 +92,9 @@ function TypingText({text, typed, isRunning, hasStarted }) {
         Math.min(targetScroll, maxScroll)
       );
     }
-  }, [typed.length, isRunning, keyboardOffset, cursorTick]);
+  }, [typed.length, isRunning, keyboardOffset]);
 
-  // Positon cursor after scroll/layout settles
+  // Position cursor after scroll/layout settles
   useLayoutEffect(() => {
     if (!isRunning) return;
     requestAnimationFrame(() => {
