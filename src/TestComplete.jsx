@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
@@ -16,6 +16,12 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome }){
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    containerRef.current?.focus();
+  }, []);
+
     return(
       <>
         <Fragment>
@@ -32,7 +38,12 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome }){
             px: {xs: 0, sm: 2, md: 3, lg: 6, xl: 9},
           }}
         >
-            <Box sx={{
+            <Box
+              ref={containerRef}
+              role='main'
+              tabIndex={-1}
+              aria-labelledby='test-complete-title' 
+              sx={{
               bgcolor: 'hsl(0, 0%, 7%)',
               display: 'flex',
               flexDirection: 'column',
@@ -56,7 +67,8 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome }){
                 <Box
                   component="img"
                   src={testOutcome.patternOne}
-                  alt="star1-pattern"
+                  alt=''
+                  aria-hidden='true'
                   sx={{
                     width: {xs: '50%', md: '80%'}
                   }}
@@ -72,7 +84,8 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome }){
                 <Box
                   component="img"
                   src={testOutcome.patternTwo}
-                  alt="star2-pattern"
+                  alt=''
+                  aria-hidden='true'
                   sx={{
                     width: {xs: '50%', md: '80%'}
                   }}
@@ -96,7 +109,6 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome }){
                       height: '100%',
                       backgroundImage: `url(${testOutcome.confettiPattern})`,
                       backgroundRepeat: 'no-repeat',
-                      // backgroundPosition: 'center bottom',
                       backgroundSize: 'cover',
                     }}
                   />
@@ -116,13 +128,15 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome }){
                   >
                     <img 
                       src={testOutcome.displayIcon}
-                      alt='Test Outcome Icon'
+                      alt=''
+                      aria-hidden='true'
                       className='ripple-icon_img'
                     />
                   </Box>
                 </Box>
                 <Typography
-                  component="div"
+                  id='test-complete-title'
+                  component="h1"
                   sx={{
                     color: 'hsl(0, 0%, 100%)',
                     fontWeight: '600',
@@ -132,8 +146,9 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome }){
                   {testOutcome.title}
                 </Typography>
                 <Typography
-                  // variant="subtitle1"
-                  component="div"
+                  role='status'
+                  aria-live='polite'
+                  // component="div"
                   sx={{
                     color: 'hsl(240, 1%, 59%)',
                     p: '0.5rem 0',
@@ -143,16 +158,26 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome }){
                 >
                   {testOutcome.feedback}
                 </Typography>
-              <Box sx={{
-                display: 'grid',
-                gridTemplateColumns: {xs: '1fr', sm: 'repeat(3, 1fr)'},
-                gap:{xs: 1.5, sm: 2},
-                mt: 3, 
-                width: {xs: '100%', md: 'auto'},
-                maxWidth: '100%',
-                boxSizing: 'border-box'
+              <Box
+                role='group'
+                aria-labelledby='results-heading'
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: {xs: '1fr', sm: 'repeat(3, 1fr)'},
+                  gap:{xs: 1.5, sm: 2},
+                  mt: 3, 
+                  width: {xs: '100%', md: 'auto'},
+                  maxWidth: '100%',
+                  boxSizing: 'border-box'
                 }}
               >
+                <Typography
+                  id='results-heading'
+                  component='h2'
+                  sx={{position: 'absolute', left: '-9999px'}}
+                >
+                  Test results
+                </Typography>
                 {results.map(({label, value, correct, errors}) => (
                   <Box
                     key={label}
@@ -200,7 +225,7 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome }){
                 )}
               </Box>
 
-              <Box 
+              <Box
                 id='TestComplete-button'
                 style={{
                   width: '100%',
@@ -208,11 +233,21 @@ function TestComplete({ restart, results, personalBest, stats, testOutcome }){
                   justifyContent: 'center',
                   }}
                 >
-                <Button size='small'
+                <Button
+                  size='small'
+                  disableRipple
+                  disableFocusRipple
+                  disableTouchRipple
                   onClick={restart}
+                  // autoFocus={!isXs}  
                 >
                   {testOutcome.actionText} 
-                  <img style={{filter: 'invert(1)'}} src={RestartIcon} alt='Restart'/>
+                  <img
+                    src={RestartIcon} 
+                    alt=''
+                    aria-hidden='true'
+                    style={{filter: 'invert(1)'}}
+                  />
                 </Button>
               </Box>
               </Box>

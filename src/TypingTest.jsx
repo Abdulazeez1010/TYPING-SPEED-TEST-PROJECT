@@ -4,7 +4,7 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import data from './data.json';
-import Button from '@mui/material/Button';
+import Button, { buttonClasses } from '@mui/material/Button';
 import { useMediaQuery, useTheme } from '@mui/material';
 import RestartIcon from './assets/images/icon-restart.svg'
 import StarPatternIconOne from './assets/images/pattern-star-1.svg';
@@ -75,6 +75,12 @@ function TypingTest() {
 
   const saved = Number(window.localStorage.getItem("personalBest")) || null;
 
+  const FOCUS = {
+    DIFFICULTY: 'difficulty',
+    MODE: 'mode',
+    TYPING: 'typing'
+  };
+
   const [difficulty, setDifficulty] = useState('hard');
   const [mode, setMode] = useState('timed');
   const [text, setText] = useState('')
@@ -91,6 +97,7 @@ function TypingTest() {
   const [totalErrors, setTotalErrors] = useState(0);
   const [correctIndex, setCorrectIndex] = useState(0);
   const [errorPosition, setErrorPosition] = useState(new Set());
+  const [focusContext, setFocusContext] = useState(null);
 
   const correctChars = 
     Math.max(typed.length - errorPosition.size, 0);
@@ -136,6 +143,22 @@ function TypingTest() {
     }
   ]
 
+  const activeDifficultyIndex = difficultyOptions.findIndex(
+    d => d.value === difficulty
+  );
+
+  const activeModeIndex = modeOptions.findIndex(
+    m => m.value === mode
+  );
+
+  const startTyping = () => {
+    setFocusContext(FOCUS.TYPING);
+    setHasStarted(true);
+    requestAnimationFrame(() => {
+      inputRef.current?.focus();
+    });
+  };
+
   useEffect(() =>{
     if (personalBest !== null){
       localStorage.setItem("personalBest", personalBest)
@@ -168,6 +191,7 @@ function TypingTest() {
       setTotalKeyStrokes(k => k + 1);
 
       if (normalizedChar !== expectedChar){
+        // console.log('normalizedChar is', normalizedChar, 'expectedChar is', expectedChar)
         setTotalErrors(e => e + 1);
         setErrorPosition(pos => {
           const copy = new Set(pos);
@@ -180,33 +204,124 @@ function TypingTest() {
   }, [text]);
 
   const handleKeyDown = useCallback((event) => {
-    if(!hasStarted){
-      setHasStarted(true);
+    if (focusContext === null && !hasStarted) {
+      if (event.key === 'Enter' || (event.key.length === 1 && !event.ctrlKey && !event.metaKey)) {
+        startTyping();
+        return;
+      }
+    }
+    // TAB switches focus context
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      setFocusContext((ctx) => {
+        if (ctx === FOCUS.DIFFICULTY) return FOCUS.MODE;
+        if (ctx === FOCUS.MODE) return FOCUS.TYPING;
+        return FOCUS.DIFFICULTY;
+      });
       return;
     }
+
+    // ARROW KEYS
+    if(!hasStarted) {
+      if (event.key === 'ArrowRight' || event.key === 'ArrowLeft'){
+        event.preventDefault();
+
+        const direction = event.key === 'ArrowRight' ? 1 : -1;
+
+        // Difficulty navigation
+        if(focusContext === FOCUS.DIFFICULTY) {
+          setDifficulty(prev => {
+            const currentIndex = difficultyOptions.findIndex(
+              d => d.value === prev
+            );
+            const nextIndex = Math.min(
+              Math.max(currentIndex + direction, 0),
+              difficultyOptions.length - 1
+            );
+            return difficultyOptions[nextIndex].value;
+          });
+          return;
+        }
+
+        // Mode navigation
+        if (focusContext === FOCUS.MODE) {
+          setMode(prev => {
+            const currentIndex = modeOptions.findIndex(
+              m => m.value === prev
+            );
+            const nextIndex = Math.min(
+              Math.max(currentIndex + direction, 0),
+              modeOptions.length - 1
+            );
+            return modeOptions[nextIndex].value;
+          });
+          return;
+        }
+      }
+    }
+
+    // ENTER behavior depends on context
+    if (event.key === 'Enter') {
+      console.log('enter pressed in context', focusContext);
+      if (
+        focusContext === FOCUS.DIFFICULTY ||
+        focusContext === FOCUS.MODE
+      ) {
+        if (focusContext === FOCUS.MODE && mode === 'passage'){
+          setDifficulty('hard');
+        }
+        startTyping();
+        return;
+      } 
+      
+      if (
+        (focusContext === null && !hasStarted) ||
+        (focusContext === FOCUS.TYPING && !hasStarted)
+      ){
+        startTyping();
+        return;
+      }
+    }
+
+    // TYPING MODE
+    if (focusContext !== FOCUS.TYPING) return;    
     if (testEnd) return;
+
+    if (event.key === 'Escape') {
+      restart();
+      setFocusContext(null);
+      setHasStarted(false);
+      return;
+    }
+
     if (event.key === ' ' && isRunning) event.preventDefault();
     if (mode === 'timed' && timeLeft === 0) return;
     if (!isRunning && typed.length > 0) return;
 
-    if (event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
-
+    if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && hasStarted) {
       processChar(event.key);
-
     } else if (event.key === "Backspace") {
       setTyped((prev) => prev.slice(0, -1));
     }
-  }, [timeLeft, mode, testEnd, isRunning, hasStarted]);
+  }, [
+    timeLeft,
+    mode,
+    testEnd,
+    isRunning,
+    hasStarted,
+    focusContext,
+    text
+  ]);
 
 
   useEffect(() => {
-    if (isMobile) return;
+    if (isMobile || testEnd) return;
 
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isMobile, handleKeyDown]);
+  }, [isMobile, testEnd, handleKeyDown]);
 
   useEffect(() => {
     if (typed.length === 1 && !isRunning) {
@@ -260,22 +375,28 @@ function TypingTest() {
 
     setPersonalBest(newBest);
     setTestOutcome(message);
-  }, [testEnd])
+  }, [testEnd]);
+
+  // useEffect(() => {
+  //   if (!hasStarted) return;
+
+  //   restart();
+  // }, [difficulty, mode]);
 
   const handleDifficulty = (lvl) => {
     setDifficulty(lvl);
     setMode('timed');
 
-    restart();
+    startTyping();
   }
 
-  const handleMode = (mode) => {
-    setMode(mode);
-    if (mode === 'passage'){
+  const handleMode = (newMode) => {
+    setMode(newMode);
+    if (newMode === 'passage'){
       setDifficulty('hard');
     }
 
-    restart();
+    startTyping();
   }
 
   const restart = () => {
@@ -295,10 +416,10 @@ function TypingTest() {
     }
   }
 
-  const handleHasStarted = () => {
-    setHasStarted(true);
-    inputRef.current?.focus();
-  } 
+  // const handleHasStarted = () => {
+  //   setHasStarted(true);
+  //   inputRef.current?.focus();
+  // } 
 
   if (!testEnd){
     return (
@@ -317,6 +438,9 @@ function TypingTest() {
         >
           <input
             ref={inputRef}
+            // aria-hidden={focusContext !== 'typing'}
+            aria-label='Typing test input'
+            tabIndex={focusContext === FOCUS.TYPING ? 0 : -1}
             type='text'
             inputMode='text'
             autoComplete='off'
@@ -363,6 +487,10 @@ function TypingTest() {
               mode={mode}
               difficulty={difficulty}
               hasStarted={hasStarted}
+              focusContext={focusContext}
+              setFocusContext={setFocusContext}
+              activeDifficultyIndex={activeDifficultyIndex}
+              activeModeIndex={activeModeIndex}
             />
             <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3,}}/>
           
@@ -372,15 +500,17 @@ function TypingTest() {
                 position: 'relative',
                 filter: hasStarted ? 'none' : 'blur(7px)',
                 transition: 'filter 0.3s ease',
-                overflow: 'hidden'
+                overflow: 'hidden',
+                // pointerEvents: !hasStarted ? 'auto' : 'none',
               }}
               onClick = {() => {
                 if (!isMobile) {
-                  handleHasStarted();
+                  startTyping();
                   return
                 };
-                handleHasStarted();
-                inputRef.current?.focus();
+                // startTyping();
+                // setFocusContext(FOCUS.TYPING);
+                // inputRef.current?.focus();
               }}
             >
               <TypingText
@@ -391,7 +521,11 @@ function TypingTest() {
               />
             </Box>
             {!hasStarted && <Box>
-              <StartOverlay handleHasStarted={handleHasStarted} />
+              <StartOverlay
+                startTyping={startTyping}
+                focusContext={focusContext}
+                setFocusContext={setFocusContext}
+              />
             </Box>}
             {hasStarted && <Divider sx={{borderColor: 'hsl(240, 1%, 59%)', opacity: 0.3}}/>}
             <Box 

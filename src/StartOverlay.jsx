@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import './StartOverlay.css'
 
 
-function StartOverlay({handleHasStarted}){
+function StartOverlay({startTyping, focusContext, setFocusContext}){
     return(
         <Box
           sx={{
@@ -24,12 +24,21 @@ function StartOverlay({handleHasStarted}){
             textAlign: 'center',
             pointerEvents: 'none'
           }}
-          onClick={() => handleHasStarted()}
+          onClick={() => {
+            startTyping();
+            setFocusContext('typing');
+            console.log('start overlay clicked')
+          }}
         >
           <Box sx={{pointerEvents: 'auto'}}>
             <Button
               id='StartOverlay-button'
-              onClick={() => handleHasStarted()}
+              onClick={() => {
+                startTyping();
+                setFocusContext('typing');
+                console.log('start overlay btn clicked')
+              }}
+              className= {focusContext === 'typing' ? 'focused_active' : ''}
             >
                 Start Typing Test
             </Button>

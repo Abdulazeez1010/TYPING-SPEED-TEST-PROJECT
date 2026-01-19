@@ -9,11 +9,10 @@
 #button .MuiButton-outlined{
     border-radius: 7px;
     text-transform: none;
-    color: white;
+    color: hsl(0, 0%, 100%);
     font-weight: 100;
     border-color: rgba(255,255,255, 0.5);
 }
-
 
 #button .MuiButton-outlined:hover{
     color: hsl(210, 100%, 65%);
@@ -26,6 +25,20 @@
     border-color: hsl(210, 100%, 65%);
     background-color: transparent;
 }
+
+#button .MuiButton-outlined.focus{
+    border-color: hsl(0, 0%, 80%);
+    background-color: transparent;
+    box-shadow: 0 0 0 2px hsl(0, 0%, 15%), 0 0 0 3px hsl(210, 100%, 65%);
+    transition: box-shadow 150ms ease, border-color 150ms ease;
+}
+
+#button .MuiButton-outlined.focused_active{
+    box-shadow: 0 0 0 2px hsl(0, 0%, 15%), 0 0 0 3px hsl(210, 100%, 65%);
+    transition: box-shadow 150ms ease, border-color 150ms ease;
+}
+
+
 
 /* .MuiMenu-paper{
     background-color: hsl(0, 0%, 15%);

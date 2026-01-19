@@ -6,6 +6,7 @@ import { useMediaQuery, useTheme } from '@mui/material';
 
 import ResponsiveSelector from './ResponsiveSelector';
 import './TypingMenuBar.css'
+import { useEffect, useState } from 'react';
 
 
 function TypingMenuBar({
@@ -17,10 +18,16 @@ function TypingMenuBar({
   modeOptions,
   mode,
   difficulty,
-  hasStarted
+  hasStarted,
+  focusContext,
+  setFocusContext,
+  activeDifficultyIndex,
+  activeModeIndex,
 }){
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
     return (
         <>
           <Toolbar disableGutters sx={{
@@ -93,7 +100,6 @@ function TypingMenuBar({
                           fontWeight: '700',
                           fontSize: {xs: '1.5rem', sm: '1rem'},
                           minWidth: (id === 'time' || id === 'accuracy') ? '4ch' : '2ch',
-                          // fontVariantNumeric: 'tabular-nums',
                           textAlign: 'right'
                         }}
                       >
@@ -132,24 +138,29 @@ function TypingMenuBar({
                 label = "Difficulty"
                 value = {difficulty}
                 options = {difficultyOptions}
-                onChange={handleDifficulty}
+                onChange = {handleDifficulty}
+                activeIndex = {activeDifficultyIndex}
+                isFocused = {focusContext === 'difficulty'}
+                hasStarted={hasStarted}
+                setFocusContext={setFocusContext}
               />
               {!isMobile && <Divider
                 flexItem
                 orientation="vertical"
                 sx={{
                   borderColor: 'hsl(240, 1%, 59%)',
-                  opacity: 0.3,
-                  // pr: { md: 1},
-                  // my: {md: 1, lg: 0},
-                  // mr: 1
+                  opacity: 0.3
                 }}
               />}
               <ResponsiveSelector
                 label = "Mode"
                 value = {mode}
                 options = {modeOptions}
-                onChange={handleMode}
+                onChange = {handleMode}
+                activeIndex = {activeModeIndex}
+                isFocused = {focusContext === 'mode'}
+                hasStarted={hasStarted}
+                setFocusContext={setFocusContext}
               />
             </Box>
         </Toolbar>

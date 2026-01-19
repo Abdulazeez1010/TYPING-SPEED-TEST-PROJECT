@@ -44,36 +44,69 @@ const CheckedRadio = (
   </Box>
 );
 
-function ResponsiveSelector({label, value, options, onChange}){
+function ResponsiveSelector({
+  label,
+  value,
+  options,
+  onChange,
+  activeIndex,
+  isFocused,
+  hasStarted,
+  setFocusContext
+}){
     return (
         <>
         {/* Desktop */}
-        <Box sx={{display: { xs: 'none', md: 'flex'}, alignItems: 'center', gap: 1}}>
+        <Box
+          role="radiogroup"
+          aria-label={label}
+          sx={{display: { xs: 'none', md: 'flex'}, alignItems: 'center', gap: 1}}
+        >
           <Typography sx={{ color: 'hsl(240, 1%, 59%)', fontSize: '0.7rem'}}>
             {label}:
           </Typography>
           <Stack id='button' spacing={0.5} direction="row">
-            {options.map((opt) => (
-            <Button
-                key={opt.value}
-                onClick={() => onChange(opt.value)}
-                className={value === opt.value ? 'active' : ''}
-                variant="outlined"
-                disableRipple
-                disableFocusRipple
-                disableTouchRipple
-                size='small'
-                sx={{
-                  fontSize: '0.7rem',
-                  minWidth: 'unset',
-                  px: 0.75,
-                  py: 0.1,
-                  whiteSpace: 'nowrap',
-                }}
-            >
-                {opt.label}
-            </Button>
-            ))}
+            {options.map((opt, i) => {
+              const isActive = i === activeIndex;
+              const isSelected = value === opt.value;
+              return (
+                <Button
+                    key={opt.value}
+                    role='radio'
+                    aria-checked= {isSelected}
+                    tabIndex={isFocused && isActive ? 0 : -1}
+                    onClick={() => {
+                      const ctx = label === 'Difficulty' ? 'difficulty' : 'mode';
+                      setFocusContext(ctx);
+                      onChange(opt.value)
+                      // console.log(isSelected, isFocused, isActive)
+                    }}
+                    className={
+                      isSelected && isFocused && isActive
+                        ? 'active focused_active'
+                        : isSelected
+                          ? 'active'
+                        : '' 
+                        +
+                      (isFocused && isActive && !hasStarted ? ' focus' : '')
+                    }
+                    variant="outlined"
+                    disableRipple
+                    disableFocusRipple
+                    disableTouchRipple
+                    size='small'
+                    sx={{
+                      fontSize: '0.7rem',
+                      minWidth: 'unset',
+                      px: 0.75,
+                      py: 0.1,
+                      whiteSpace: 'nowrap',
+                    }}
+                >
+                    {opt.label}
+                </Button>
+              )
+            })}
           </Stack>
           </Box>
 

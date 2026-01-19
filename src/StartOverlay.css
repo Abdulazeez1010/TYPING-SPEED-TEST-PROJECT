@@ -11,3 +11,8 @@
 #StartOverlay-button:hover {
     background-color: hsl(210, 100%, 65%);
 }
+
+#StartOverlay-button.focused_active{
+    box-shadow: 0 0 0 2px hsl(0, 0%, 15%), 0 0 0 3px hsl(210, 100%, 65%);
+    transition: box-shadow 150ms ease, border-color 150ms ease;
+}

@@ -1,4 +1,4 @@
-#TestComplete-button Button{
+#TestComplete-button Button {
     border-radius: 10px;
     text-transform: none;
     color: hsl(0, 0%, 7%);
@@ -15,6 +15,14 @@
     width: 1rem;
     height: 1rem;
     margin: 0.5rem;
+}
+
+#TestComplete-button .MuiButton-root:focus-visible {
+    outline: none;
+    box-shadow:
+        0 0 0 2px hsl(0, 0%, 15%),
+        0 0 0 3px hsl(0, 0%, 100%);
+    transition: box-shadow 150ms ease;
 }
 
 .ripple-icon {
