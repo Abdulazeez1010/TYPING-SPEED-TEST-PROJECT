@@ -81,8 +81,6 @@ In future iterations, I'd like to implement the following:
 - Frontend Mentor - [@Abdulazeez1010](https://www.frontendmentor.io/profile/Abdulazeez1010)
 - LinkedIn - [Abdulazeez Alani](https://www.linkedin.com/in/abdulazeez-alani-3624901a0/)
 
-**Note: Delete this note and add/remove/edit lines above based on what links you'd like to share.**
-
 ## Acknowledgments
 
 Glory be to God for helping push through this project. AlhamduliLlah!
